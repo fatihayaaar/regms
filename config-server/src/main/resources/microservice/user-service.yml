@@ -1,0 +1,9 @@
+server:
+  port: 8087
+
+spring:
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=fayardev,dc=com
+    username: cn=admin,dc=fayardev,dc=com
+    password: admin

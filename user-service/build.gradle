@@ -1,0 +1,37 @@
+plugins {
+}
+
+group = 'com.fayardev.regms'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = '17'
+}
+
+dependencies {
+    implementation 'org.springframework.data:spring-data-ldap:2.6.2'
+
+    implementation 'org.modelmapper:modelmapper:2.4.4'
+
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'jakarta.servlet:jakarta.servlet-api:4.0.2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+    implementation 'org.aspectj:aspectjweaver:1.9.9.1'
+    implementation 'org.aspectj:aspectjrt:1.9.9.1'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,6 @@
+rootProject.name = 'regms'
+
+include 'parent-service'
+include 'user-service'
+include 'config-server'
+
