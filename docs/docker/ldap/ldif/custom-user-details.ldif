@@ -1,0 +1,22 @@
+dn: cn={3}inetorgperson,cn=schema,cn=config
+changetype: modify
+add: olcAttributeTypes
+olcAttributeTypes: {2}( 2.16.840.1.11730.3.1.36 NAME 'gender' DESC 'gender for user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+-
+add: olcAttributeTypes
+olcAttributeTypes: {3}( 2.16.840.1.11730.3.1.37 NAME 'birthOfDate' DESC 'birthOfDate for user' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24{24} SINGLE-VALUE )
+-
+add: olcAttributeTypes
+olcAttributeTypes: {4}( 2.16.840.1.11730.3.1.38 NAME 'confirm' DESC 'boolean attribute' EQUALITY booleanMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE )
+-
+add: olcAttributeTypes
+olcAttributeTypes: {5}( 2.16.840.1.11730.3.1.39 NAME 'verified' DESC 'boolean attribute' EQUALITY booleanMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE )
+-
+add: olcAttributeTypes
+olcAttributeTypes: {6}( 2.16.840.1.11730.3.1.40 NAME 'isActive' DESC 'boolean attribute' EQUALITY booleanMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE )
+-
+add: olcAttributeTypes
+olcAttributeTypes: {7}( 2.16.840.1.11730.3.1.41 NAME 'createDate' DESC 'createDate for user' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24{24} SINGLE-VALUE )
+-
+replace: olcObjectClasses
+olcObjectClasses: ( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC2798: Internet Organizational Person' SUP organizationalPerson STRUCTURAL MAY ( audio $ businessCategory $ carLicense $ departmentNumber $ displayName $ employeeNumber $ employeeType $ givenName $ homePhone $ homePostalAddress $ initials $ jpegPhoto $ labeledURI $ mail $ manager $ mobile $ o $ pager $ photo $ roomNumber $ secretary $ uid $ userCertificate $ x500uniqueIdentifier $ preferredLanguage $ userSMIMECertificate $ userPKCS12 $ gender $ birthOfDate $ confirm $ verified $ isActive $ createDate) )
