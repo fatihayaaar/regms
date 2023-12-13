@@ -2,11 +2,11 @@ server:
   port: ${SERVER_PORT:8888}
 
 spring:
+  profiles:
+    active: native
+
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/microservice
-
-  profiles:
-    active: native

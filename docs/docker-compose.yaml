@@ -97,35 +97,10 @@ services:
     networks:
       - service-net
 
-  eureka-server:
-    image: springcloud/eureka
-    container_name: eureka-server
-    restart: always
-    ports:
-      - "8761:8761"
-    networks:
-      - eureka-net
-
-  mariadb:
-    image: mariadb
-    container_name: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: admin
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
-    ports:
-      - "3306:3306"
-
 networks:
   openldap-net:
     driver: bridge
   mysql-net:
     driver: bridge
   service-net:
-    driver: bridge
-  eureka-net:
-    driver: bridge
-  mariadb-net:
     driver: bridge
