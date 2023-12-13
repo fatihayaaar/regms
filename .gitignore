@@ -1,0 +1,42 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# IntelliJ IDEA files
+.idea/
+
+# Eclipse files
+.classpath
+.project
+.settings/
+bin/
+
+# Compiled files
+target/
+build/
+
+# Gradle specific files
+.gradle/
+
+# Spring Boot's DevTools configuration
+/.idea/
+/.classpath
+/.project
+/.settings/
+/.factorypath
+
+# Spring Boot's log files
+log/
+logs/
+
+# Spring Boot's generated application properties
+/application.properties
+/application-test.properties
+/application-local.properties
+/application-dev.properties
+/application-prod.properties
+
+# Spring Boot's generated keystore
+*.jks
