@@ -13,6 +13,7 @@ java {
 }
 
 dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.data:spring-data-ldap:2.6.2'
 
     implementation 'org.modelmapper:modelmapper:2.4.4'
