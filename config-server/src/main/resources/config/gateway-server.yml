@@ -1,10 +1,6 @@
 server:
   port: ${SERVER_PORT:8088}
 
-spring:
-  application:
-    name: api-gateway
-
 eureka:
   client:
     serviceUrl:
@@ -13,10 +9,23 @@ eureka:
   instance:
     preferIpAddress: true
 
+spring:
+  application:
+    name: gateway-server
   cloud:
     gateway:
       routes:
         - id: user-service
-          uri: lb://USER-SERVICE
+          uri: lb://user-service
           predicates:
             - Path=/user/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackCommand
+                fallbackUri: forward:/fallback/message
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
