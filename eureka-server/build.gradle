@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-netflix-eureka-server'
 
     testImplementation platform('org.junit:junit-bom:5.9.1')

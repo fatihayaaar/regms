@@ -48,7 +48,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(
                 getTimeStamp(),
                 HttpStatus.BAD_REQUEST,
-                ex.getLocalizedMessage(),
+               " ex.getLocalizedMessage()",
                 errors,
                 "");
 
@@ -62,7 +62,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(
                 getTimeStamp(),
                 HttpStatus.BAD_REQUEST,
-                ex.getLocalizedMessage(),
+                "ex.getLocalizedMessage()",
                 ex.getParameterName() + " parameter is missing",
                 "",
                 "");
@@ -76,7 +76,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(
                 getTimeStamp(),
                 HttpStatus.BAD_REQUEST,
-                ex.getLocalizedMessage(),
+                "ex.getLocalizedMessage()",
                 ex.getName() + " should be of type " + ex.getRequiredType().getName(),
                 "",
                 "");
@@ -90,7 +90,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(
                 getTimeStamp(),
                 HttpStatus.BAD_REQUEST,
-                ex.getLocalizedMessage(),
+                "ex.getLocalizedMessage()",
                 ex.toString(),
                 "",
                 "");
@@ -104,7 +104,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(
                 getTimeStamp(),
                 HttpStatus.BAD_REQUEST,
-                ex.getLocalizedMessage(),
+                "ex.getLocalizedMessage()",
                 UserException.NAME,
                 ex.getError().name(),
                 ex.getErrorComponent().name());

@@ -5,5 +5,3 @@ include 'user-service'
 include 'config-server'
 include 'gateway-server'
 include 'eureka-server'
-include 'hystrix-dashboard'
-

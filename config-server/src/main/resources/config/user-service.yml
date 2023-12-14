@@ -1,0 +1,18 @@
+server:
+  port: ${SERVER_PORT:8087}
+
+eureka:
+  client:
+    instance:
+      hostname: ${EUREKA_SERVER_HOSTNAME:localhost}
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8500/eureka/}
+
+spring:
+  application:
+    name: user-service
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=fayardev,dc=com
+    username: cn=admin,dc=fayardev,dc=com
+    password: admin

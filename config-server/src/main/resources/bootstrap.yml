@@ -8,4 +8,6 @@ spring:
     config:
       server:
         native:
-          search-locations: classpath:/microservice
+          search-locations: classpath:/config
+  application:
+    name: config-server
