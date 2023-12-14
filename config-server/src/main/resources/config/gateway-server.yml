@@ -12,3 +12,11 @@ eureka:
     register-with-eureka: false
   instance:
     preferIpAddress: true
+
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**

@@ -97,6 +97,14 @@ services:
     networks:
       - service-net
 
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+
 networks:
   openldap-net:
     driver: bridge
