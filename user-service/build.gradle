@@ -21,6 +21,8 @@ dependencies {
 
     implementation 'org.springframework.data:spring-data-ldap:2.6.2'
 
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
+
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 

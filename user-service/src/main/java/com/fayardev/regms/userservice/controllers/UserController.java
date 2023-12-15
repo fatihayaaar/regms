@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public final class UserController {
 

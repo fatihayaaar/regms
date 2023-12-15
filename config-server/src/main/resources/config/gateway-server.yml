@@ -14,16 +14,29 @@ spring:
     name: gateway-server
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user/**
           filters:
-            - name: Hystrix
-              args:
-                name: fallbackCommand
-                fallbackUri: forward:/fallback/message
+            - RewritePath=/user/(?<path>.*), /$\{path}
+
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: user-service
+        url: /v3/api-docs/user
 
 management:
   tracing:

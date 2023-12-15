@@ -19,6 +19,9 @@ spring:
     username: cn=admin,dc=fayardev,dc=com
     password: admin
 
+springdoc:
+  packagesToScan: com.fayardev.regms.userservice
+
 management:
   tracing:
     sampling:
