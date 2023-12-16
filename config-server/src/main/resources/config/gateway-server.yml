@@ -24,6 +24,10 @@ spring:
             - Path=/user/**
           filters:
             - RewritePath=/user/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/userFallback
 
         - id: openapi
           uri: http://localhost:${server.port}
