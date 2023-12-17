@@ -1,0 +1,23 @@
+server:
+  port: ${SERVER_PORT:8085}
+
+eureka:
+  client:
+    instance:
+      hostname: ${EUREKA_SERVER_HOSTNAME:localhost}
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8500/eureka/}
+
+spring:
+  application:
+    name: post-service
+  zipkin:
+    base-url: http://localhost:9411
+
+springdoc:
+  packagesToScan: com.fayardev.regms.postservice
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

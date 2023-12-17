@@ -28,14 +28,28 @@ spring:
               args:
                 name: userCircuitBreaker
                 fallbackUri: forward:/fallback/userFallback
-
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
             - Path=/v3/api-docs/**
           filters:
             - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
-
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/auth/realms/regms
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: regms
+            client-secret: xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m
+            client-name: Keycloak
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
 springdoc:
   swagger-ui:
     urls:
