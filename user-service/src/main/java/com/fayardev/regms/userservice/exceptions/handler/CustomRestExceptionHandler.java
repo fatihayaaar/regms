@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @ControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -77,11 +78,11 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                 getTimeStamp(),
                 HttpStatus.BAD_REQUEST,
                 "ex.getLocalizedMessage()",
-                ex.getName() + " should be of type " + ex.getRequiredType().getName(),
+                ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName(),
                 "",
                 "");
 
-        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
     @ExceptionHandler({IllegalStateException.class})
@@ -95,7 +96,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                 "",
                 "");
 
-        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
     @ExceptionHandler({UserException.class})

@@ -15,7 +15,8 @@ class SecurityConfig {
     @Bean
     public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(new AntPathRequestMatcher("/validate*")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/validate/username/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                 .anyRequest()
                 .authenticated()
         );

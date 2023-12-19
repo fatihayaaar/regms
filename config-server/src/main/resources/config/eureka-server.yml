@@ -7,7 +7,7 @@ eureka:
   instance:
     hostname: ${EUREKA_SERVER_HOST:localhost}
   client:
-    registerWithEureka: true
+    registerWithEureka: false
     fetchRegistry: true
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8500/eureka/}

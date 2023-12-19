@@ -43,7 +43,7 @@ spring:
             user-name-attribute: preferred_username
         registration:
           keycloak:
-            client-id: regms
+            client-id: regms-login
             client-secret: xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m
             client-name: Keycloak
             authorization-grant-type: authorization_code
