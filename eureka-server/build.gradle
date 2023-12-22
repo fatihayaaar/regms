@@ -12,6 +12,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-netflix-eureka-server'
 
+    implementation 'de.codecentric:spring-boot-admin-starter-client:3.1.8'
+
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

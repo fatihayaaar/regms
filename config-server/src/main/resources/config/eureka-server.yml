@@ -1,5 +1,9 @@
 server:
   port: 8500
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:8077}
 
 eureka:
   server:
@@ -11,3 +15,9 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8500/eureka/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

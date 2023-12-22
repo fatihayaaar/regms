@@ -1,5 +1,9 @@
 server:
   port: ${SERVER_PORT:8082}
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:8077}
 
 eureka:
   client:
@@ -21,3 +25,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: "*"

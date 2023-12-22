@@ -9,3 +9,5 @@ include 'post-service'
 include 'follow-service'
 include 'feed-service'
 include 'file-server'
+include 'admin-server'
+
