@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    git branch: 'main',
+                    credentialsId: '2228b488-e0c8-41ab-8795-37afc7022a8b',
+                    url: 'https://github.com/fatihayaaar/regms.git'
+                }
+            }
+        }
+
+        stage('Build') {
+            script {
+                sh './gradlew clean build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'success'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'success'
+        }
+        failure {
+            echo 'error'
+        }
+    }
+}
