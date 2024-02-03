@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'chmod + ./gradlew'
+                    sh 'chmod +x gradlew'
                 }
                 script {
                     sh './gradlew clean build'
@@ -27,15 +27,6 @@ pipeline {
             steps {
                 echo 'success'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'success'
-        }
-        failure {
-            echo 'error'
         }
     }
 }
