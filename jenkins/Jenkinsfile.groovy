@@ -16,17 +16,9 @@
             steps {
                 script {
                     sh 'chmod +x gradlew'
-                }
-                script {
                     sh './gradlew :config-server:build'
-                }
-                script {
                     sh './gradlew :eureka-server:build'
-                }
-                script {
                     sh './gradlew :gateway-server:build'
-                }
-                script {
                     sh './gradlew :user-service:build'
                 }
             }
