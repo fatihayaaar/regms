@@ -1,4 +1,4 @@
-pipeline {
+﻿pipeline {
     agent any
 
     stages {
@@ -18,14 +18,25 @@ pipeline {
                     sh 'chmod +x gradlew'
                 }
                 script {
-                    sh './gradlew clean build'
+                    sh './gradlew :config-server:build'
+                }
+                script {
+                    sh './gradlew :eureka-server:build'
+                }
+                script {
+                    sh './gradlew :gateway-server:build'
+                }
+                script {
+                    sh './gradlew :user-service:build'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'success'
+                script {
+                    sh 'docker-compose up -d'
+                }
             }
         }
     }

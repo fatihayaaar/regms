@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  config-server:
+    container_name: config-server
+    build:
+      context: config-server
+      dockerfile: Dockerfile
+    volumes:
+      - /tmp
+  eureka-server:
+    container_name: eureka-server
+    build:
+      context: eureka-server
+      dockerfile: Dockerfile
+    volumes:
+      - /tmp
+  gateway-server:
+    container_name: gateway-server
+    build:
+      context: gateway-server
+      dockerfile: Dockerfile
+    volumes:
+      - /tmp
+  user-service:
+    container_name: user-service
+    build:
+      context: user-service
+      dockerfile: Dockerfile
+    volumes:
+      - /tmp
