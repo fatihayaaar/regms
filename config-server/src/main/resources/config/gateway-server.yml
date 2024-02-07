@@ -1,10 +1,10 @@
 server:
-  port: ${SERVER_PORT:8088}
+  port: ${GATEWAY_SERVER_PORT:8088}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8500}/eureka/
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
     register-with-eureka: false
   instance:
     preferIpAddress: true
@@ -39,12 +39,12 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8081/auth/realms/regms
+            issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
             user-name-attribute: preferred_username
         registration:
           keycloak:
-            client-id: regms-login
-            client-secret: xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m
+            client-id: ${KEYCLOAK_CLIENT_ID:regms-login}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m}
             client-name: Keycloak
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"

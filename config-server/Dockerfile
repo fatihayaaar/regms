@@ -5,4 +5,30 @@ COPY build/libs/config-server-1.0.jar config-server.jar
 
 VOLUME /tmp
 
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-jar", "/app/config-server.jar"]
+ENV SERVER_PORT=8888
+ENV EUREKA_SERVER_PORT=8761
+ENV SPRING_BOOT_ADMIN_SERVER_PORT=8077
+ENV GATEWAY_SERVER_PORT=8088
+ENV USER_SERVICE_SERVER_PORT=8087
+ENV PROFILE_SERVICE_SERVER_PORT=8086
+ENV POST_SERVICE_SERVER_PORT=8085
+ENV FILE_SERVICE_SERVER_PORT=8083
+ENV FOLLOW_SERVICE_SERVER_PORT=8084
+ENV FEED_SERVICE_SERVER_PORT=8082
+
+ENV EUREKA_SERVER_HOST="localhost"
+ENV EUREKA_SERVER_URL="http://localhost:8761"
+
+ENV SPRING_BOOT_ADMIN_SERVER_URL="http://localhost:8077"
+ENV ZIPKIN_SERVER_URL="http://localhost:9411"
+
+ENV LDAP_SERVER_URL="ldap://localhost:389"
+ENV LDAP_BASE="dc=fayardev,dc=com"
+ENV LDAP_USERNAME="cn=admin"
+ENV LDAP_PASSWORD="admin2"
+
+ENV KEYCLOAK_CLIENT_ID="regms-login"
+ENV KEYCLOAK_CLIENT_SECRET="xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m"
+ENV OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI="http://localhost:8081/auth/realms/regms"
+
+CMD ["java", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/config-server.jar"]

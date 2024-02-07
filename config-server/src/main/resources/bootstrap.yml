@@ -11,3 +11,18 @@ spring:
           search-locations: classpath:/config
   application:
     name: config-server
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true

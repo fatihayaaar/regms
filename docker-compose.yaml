@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.9"
 
 services:
   config-server:
@@ -6,15 +6,67 @@ services:
     build:
       context: config-server
       dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${CONFIG_SERVER_PORT}
+
+      EUREKA_SERVER_PORT: ${EUREKA_SERVER_PORT}
+      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+
+      SPRING_BOOT_ADMIN_SERVER_PORT: ${SPRING_BOOT_ADMIN_SERVER_PORT}
+      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+
+      GATEWAY_SERVER_PORT: ${GATEWAY_SERVER_PORT}
+      USER_SERVICE_SERVER_PORT: ${USER_SERVICE_SERVER_PORT}
+      PROFILE_SERVICE_SERVER_PORT: ${PROFILE_SERVICE_SERVER_PORT}
+      POST_SERVICE_SERVER_PORT: ${POST_SERVICE_SERVER_PORT}
+      FILE_SERVICE_SERVER_PORT: ${FILE_SERVICE_SERVER_PORT}
+      FOLLOW_SERVICE_SERVER_PORT: ${FOLLOW_SERVICE_SERVER_PORT}
+      FEED_SERVICE_SERVER_PORT: ${FEED_SERVICE_SERVER_PORT}
+
+      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
+
+      LDAP_SERVER_URL: ${LDAP_SERVER_URL}
+      LDAP_BASE: ${LDAP_BASE}
+      LDAP_USERNAME: ${LDAP_USERNAME}
+      LDAP_PASSWORD: ${LDAP_PASSWORD}
+
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     volumes:
       - /tmp
+    ports:
+      - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
+    healthcheck:
+      test: "curl -f ${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: always
+    networks:
+      - regms-network
+
   eureka-server:
     container_name: eureka-server
     build:
       context: eureka-server
       dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${EUREKA_SERVER_PORT}
+      PROFILE: ${EUREKA_SERVER_PROFILE}
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
     volumes:
       - /tmp
+    ports:
+      - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
+    restart: always
+    depends_on:
+      config-server:
+        condition: service_healthy
+    networks:
+      - regms-network
+
   gateway-server:
     container_name: gateway-server
     build:
@@ -22,10 +74,29 @@ services:
       dockerfile: Dockerfile
     volumes:
       - /tmp
+    restart: on-failure
+    depends_on:
+      - config-server
+      - eureka-server
+    networks:
+      - regms-network
+
   user-service:
     container_name: user-service
     build:
       context: user-service
       dockerfile: Dockerfile
+    environment:
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
     volumes:
       - /tmp
+    restart: on-failure
+    depends_on:
+      - config-server
+      - eureka-server
+      - gateway-server
+    networks:
+      - regms-network
+
+networks:
+  regms-network:

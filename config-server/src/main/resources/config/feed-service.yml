@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:8082}
+  port: ${FEED_SERVICE_SERVER_PORT:8082}
   boot:
     admin:
       client:
@@ -10,13 +10,13 @@ eureka:
     instance:
       hostname: ${EUREKA_SERVER_HOSTNAME:localhost}
     serviceUrl:
-      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8500/eureka/}
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761}/eureka/
 
 spring:
   application:
     name: feed-service
   zipkin:
-    base-url: http://localhost:9411
+    base-url: ${ZIPKIN_SERVER_URL:http://localhost:9411}
 
 springdoc:
   packagesToScan: com.fayardev.regms.feedservice
