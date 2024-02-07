@@ -1,11 +1,44 @@
 version: "3.3"
 
 services:
+  openldap:
+    container_name: openldap
+    image: osixia/openldap:latest
+    environment:
+      LDAP_ORGANISATION: ${LDAP_ORGANISATION}
+      LDAP_DOMAIN: ${LDAP_DOMAIN}
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD}
+      LDAP_CONFIG_PASSWORD: ${LDAP_CONFIG_PASSWORD}
+      LDAP_TLS_VERIFY_CLIENT: "never"
+    volumes:
+      - ./tmp/storage/openldap/ldap_db:/var/lib/ldap
+      - ./tmp/storage/openldap/ldap_config:/etc/ldap/slapd.d
+      - ./tmp/ldap/ldif:/container/documents
+    ports:
+      - "389:389"
+      - "636:636"
+    restart: always
+    networks:
+      - openldap_network
+      - user_service_network
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    ports:
+      - "8083:443"
+    restart: on-failure
+    depends_on:
+      - openldap
+    networks:
+      - openldap_network
+
   mysql:
     platform: linux/x86_64
     image: mysql:5.7
     container_name: mysql
-    restart: always
     ports:
       - "3306:3306"
     volumes:
@@ -15,28 +48,30 @@ services:
       MYSQL_DATABASE: "keycloak"
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: always
+    depends_on:
+      - openldap
     networks:
-      - mysql-net
+      - mysql_network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
-    restart: always
     environment:
       PMA_HOST: "mysql"
       PMA_USER: ${PMA_USER}
       PMA_PASSWORD: ${PMA_PASSWORD}
-    depends_on:
-      - mysql
     ports:
       - "8080:80"
+    restart: on-failure
+    depends_on:
+      - mysql
     networks:
-      - mysql-net
+      - mysql_network
 
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
     container_name: keycloak
-    restart: always
     environment:
       DB_VENDOR: MYSQL
       DB_ADDR: mysql
@@ -45,70 +80,39 @@ services:
       DB_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8081:8080"
+    restart: always
     depends_on:
       - mysql
-    networks:
-      - openldap-net
-      - mysql-net
-
-  openldap:
-    container_name: openldap
-    image: osixia/openldap:latest
-    restart: always
-    volumes:
-      - ./tmp/storage/openldap/ldap_db:/var/lib/ldap
-      - ./tmp/storage/openldap/ldap_config:/etc/ldap/slapd.d
-      - ./tmp/ldap/ldif:/container/documents
-    environment:
-      LDAP_ORGANISATION: ${LDAP_ORGANISATION}
-      LDAP_DOMAIN: ${LDAP_DOMAIN}
-      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD}
-      LDAP_CONFIG_PASSWORD: ${LDAP_CONFIG_PASSWORD}
-      LDAP_TLS_VERIFY_CLIENT: "never"
-    ports:
-      - "389:389"
-      - "636:636"
-    networks:
-      - openldap-net
-
-  phpldapadmin:
-    image: osixia/phpldapadmin:0.9.0
-    container_name: phpldapadmin
-    restart: always
-    environment:
-      - PHPLDAPADMIN_LDAP_HOSTS=openldap
-    ports:
-      - "8083:443"
-    depends_on:
       - openldap
     networks:
-      - openldap-net
+      - openldap_network
+      - mysql_network
 
   rabbitmq:
     image: "rabbitmq:latest"
     container_name: rabbitmq
-    restart: always
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     ports:
       - "5672:5672"
       - "15672:15672"
+    restart: always
     networks:
-      - service-net
+      - regms_network
 
-  zipkin:
+  zipkin-server:
     image: openzipkin/zipkin
-    container_name: zipkin
-    ports:
-      - "9411:9411"
+    container_name: zipkin-server
     environment:
       - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
+    restart: on-failure
+    networks:
+     - regms_network
 
 networks:
-  openldap-net:
-    driver: bridge
-  mysql-net:
-    driver: bridge
-  service-net:
-    driver: bridge
+  regms_network:
+  openldap_network:
+  mysql_network:

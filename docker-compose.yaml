@@ -110,6 +110,7 @@ services:
         condition: service_healthy
     networks:
       - regms_network
+      - user_service_network
 
   profile-service:
       container_name: profile-service
@@ -251,3 +252,4 @@ services:
 networks:
   regms_network:
     driver: bridge
+  user_service_network:
