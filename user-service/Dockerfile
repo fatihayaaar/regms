@@ -5,4 +5,6 @@ COPY build/libs/user-service-1.0.jar user-service.jar
 
 VOLUME /tmp
 
+ENV SERVER_PORT=8087
+
 ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-jar", "/app/user-service.jar"]

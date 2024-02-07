@@ -1,8 +1,8 @@
 server:
-  port: ${SERVER_PORT:8761}
+  port: ${SERVER_PORT:0}
 spring:
   profiles:
-    active: ${PROFILE:DEV}
+    active: ${PROFILE:native}
   application:
     name: eureka-server
 

@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 
 services:
   config-server:
@@ -39,7 +39,7 @@ services:
     ports:
       - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
     healthcheck:
-      test: "curl -f ${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/actuator/health/readiness || exit 1"
+      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/actuator/health/readiness || exit 1"
       interval: 2s
       timeout: 3s
       retries: 15
@@ -60,6 +60,11 @@ services:
       - /tmp
     ports:
       - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${EUREKA_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
     restart: always
     depends_on:
       config-server:
@@ -74,10 +79,17 @@ services:
       dockerfile: Dockerfile
     volumes:
       - /tmp
+    ports:
+      - "${GATEWAY_SERVER_PORT}:${GATEWAY_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${GATEWAY_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
     restart: on-failure
     depends_on:
-      - config-server
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     networks:
       - regms-network
 
@@ -90,11 +102,17 @@ services:
       CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
     volumes:
       - /tmp
+    ports:
+      - "${USER_SERVICE_SERVER_PORT}:${USER_SERVICE_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${USER_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
     restart: on-failure
     depends_on:
-      - config-server
-      - eureka-server
-      - gateway-server
+      gateway-server:
+        condition: service_healthy
     networks:
       - regms-network
 

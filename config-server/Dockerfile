@@ -25,10 +25,10 @@ ENV ZIPKIN_SERVER_URL="http://localhost:9411"
 ENV LDAP_SERVER_URL="ldap://localhost:389"
 ENV LDAP_BASE="dc=fayardev,dc=com"
 ENV LDAP_USERNAME="cn=admin"
-ENV LDAP_PASSWORD="admin2"
+ENV LDAP_PASSWORD="admin"
 
 ENV KEYCLOAK_CLIENT_ID="regms-login"
 ENV KEYCLOAK_CLIENT_SECRET="xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m"
 ENV OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI="http://localhost:8081/auth/realms/regms"
 
-CMD ["java", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/config-server.jar"]
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/config-server.jar"]
