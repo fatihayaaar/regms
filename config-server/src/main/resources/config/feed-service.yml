@@ -1,5 +1,5 @@
 server:
-  port: ${FEED_SERVICE_SERVER_PORT:8082}
+  port: ${SERVER_PORT:0}
   boot:
     admin:
       client:

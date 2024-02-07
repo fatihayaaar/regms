@@ -7,33 +7,8 @@ services:
       context: config-server
       dockerfile: Dockerfile
     environment:
+      PROFILES: ${SPRING_PROFILES}
       SERVER_PORT: ${CONFIG_SERVER_PORT}
-
-      EUREKA_SERVER_PORT: ${EUREKA_SERVER_PORT}
-      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-
-      SPRING_BOOT_ADMIN_SERVER_PORT: ${SPRING_BOOT_ADMIN_SERVER_PORT}
-      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-
-      GATEWAY_SERVER_PORT: ${GATEWAY_SERVER_PORT}
-      USER_SERVICE_SERVER_PORT: ${USER_SERVICE_SERVER_PORT}
-      PROFILE_SERVICE_SERVER_PORT: ${PROFILE_SERVICE_SERVER_PORT}
-      POST_SERVICE_SERVER_PORT: ${POST_SERVICE_SERVER_PORT}
-      FILE_SERVICE_SERVER_PORT: ${FILE_SERVICE_SERVER_PORT}
-      FOLLOW_SERVICE_SERVER_PORT: ${FOLLOW_SERVICE_SERVER_PORT}
-      FEED_SERVICE_SERVER_PORT: ${FEED_SERVICE_SERVER_PORT}
-
-      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
-
-      LDAP_SERVER_URL: ${LDAP_SERVER_URL}
-      LDAP_BASE: ${LDAP_BASE}
-      LDAP_USERNAME: ${LDAP_USERNAME}
-      LDAP_PASSWORD: ${LDAP_PASSWORD}
-
-      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
-      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
-      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     volumes:
       - /tmp
     ports:
@@ -45,7 +20,7 @@ services:
       retries: 15
     restart: always
     networks:
-      - regms-network
+      - regms_network
 
   eureka-server:
     container_name: eureka-server
@@ -53,15 +28,18 @@ services:
       context: eureka-server
       dockerfile: Dockerfile
     environment:
+      PROFILES: ${EUREKA_SERVER_PROFILE}
       SERVER_PORT: ${EUREKA_SERVER_PORT}
-      PROFILE: ${EUREKA_SERVER_PROFILE}
+      SERVER_HOST: ${EUREKA_SERVER_HOST}
+      SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
       CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
     volumes:
       - /tmp
     ports:
       - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
     healthcheck:
-      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${EUREKA_SERVER_PORT}/actuator/health/readiness || exit 1"
+      test: "wget --spider -S eureka-server:${EUREKA_SERVER_PORT}/actuator/health/readiness || exit 1"
       interval: 2s
       timeout: 3s
       retries: 15
@@ -70,19 +48,26 @@ services:
       config-server:
         condition: service_healthy
     networks:
-      - regms-network
+      - regms_network
 
   gateway-server:
     container_name: gateway-server
     build:
       context: gateway-server
       dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${GATEWAY_SERVER_PORT}
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     volumes:
       - /tmp
     ports:
       - "${GATEWAY_SERVER_PORT}:${GATEWAY_SERVER_PORT}"
     healthcheck:
-      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${GATEWAY_SERVER_PORT}/actuator/health/readiness || exit 1"
+      test: "wget --spider -S gateway-server:${GATEWAY_SERVER_PORT}/actuator/health/readiness || exit 1"
       interval: 2s
       timeout: 3s
       retries: 15
@@ -91,7 +76,7 @@ services:
       eureka-server:
         condition: service_healthy
     networks:
-      - regms-network
+      - regms_network
 
   user-service:
     container_name: user-service
@@ -99,13 +84,23 @@ services:
       context: user-service
       dockerfile: Dockerfile
     environment:
+      SERVER_PORT: ${USER_SERVICE_SERVER_PORT}
       CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      LDAP_SERVER_URL: ${LDAP_SERVER_URL}
+      LDAP_BASE: ${LDAP_BASE}
+      LDAP_USERNAME: ${LDAP_USERNAME}
+      LDAP_PASSWORD: ${LDAP_PASSWORD}
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
+      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
     volumes:
       - /tmp
     ports:
       - "${USER_SERVICE_SERVER_PORT}:${USER_SERVICE_SERVER_PORT}"
     healthcheck:
-      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${USER_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
+      test: "wget --spider -S user-service:${USER_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
       interval: 2s
       timeout: 3s
       retries: 15
@@ -114,7 +109,145 @@ services:
       gateway-server:
         condition: service_healthy
     networks:
-      - regms-network
+      - regms_network
+
+  profile-service:
+      container_name: profile-service
+      build:
+        context: profile-service
+        dockerfile: Dockerfile
+      environment:
+        SERVER_PORT: ${PROFILE_SERVICE_SERVER_PORT}
+        CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+        EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
+        EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+        SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+        ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
+      volumes:
+        - /tmp
+      ports:
+        - "${PROFILE_SERVICE_SERVER_PORT}:${PROFILE_SERVICE_SERVER_PORT}"
+      healthcheck:
+        test: "wget --spider -S profile-service:${PROFILE_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
+        interval: 2s
+        timeout: 3s
+        retries: 15
+      restart: on-failure
+      depends_on:
+        gateway-server:
+          condition: service_healthy
+      networks:
+        - regms_network
+
+  post-service:
+    container_name: post-service
+    build:
+      context: post-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${POST_SERVICE_SERVER_PORT}
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
+    volumes:
+      - /tmp
+    ports:
+      - "${POST_SERVICE_SERVER_PORT}:${POST_SERVICE_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S post-service:${POST_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: on-failure
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
+
+  feed-service:
+    container_name: feed-service
+    build:
+      context: feed-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${FEED_SERVICE_SERVER_PORT}
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
+    volumes:
+      - /tmp
+    ports:
+      - "${FEED_SERVICE_SERVER_PORT}:${FEED_SERVICE_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S feed-service:${FEED_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: on-failure
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
+
+  follow-service:
+    container_name: follow-service
+    build:
+      context: follow-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${FOLLOW_SERVICE_SERVER_PORT}
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
+    volumes:
+      - /tmp
+    ports:
+      - "${FOLLOW_SERVICE_SERVER_PORT}:${FOLLOW_SERVICE_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S follow-service:${FOLLOW_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: on-failure
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
+
+  admin-server:
+    container_name: admin-server
+    build:
+      context: admin-server
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: ${SPRING_BOOT_ADMIN_SERVER_PORT}
+      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+    volumes:
+      - /tmp
+    ports:
+      - "${SPRING_BOOT_ADMIN_SERVER_PORT}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+    healthcheck:
+      test: "wget --spider -S admin-server:${ADMIN_SERVER_PORT}/actuator/health/readiness || exit 1"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: on-failure
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
 
 networks:
-  regms-network:
+  regms_network:
+    driver: bridge

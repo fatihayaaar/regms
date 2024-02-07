@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: native
+    active: ${PROFILES:native}
   cloud:
     config:
       server:

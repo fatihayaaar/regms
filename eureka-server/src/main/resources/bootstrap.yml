@@ -2,11 +2,11 @@ server:
   port: ${SERVER_PORT:0}
 spring:
   profiles:
-    active: ${PROFILE:native}
+    active: ${PROFILES:native}
   application:
     name: eureka-server
 
   cloud:
     config:
-      profile: native
+      profile: ${PROFILES:native}
       uri: ${CONFIG_SERVER_URL:http://localhost:8888}
