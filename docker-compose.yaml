@@ -1,6 +1,161 @@
 version: "3.3"
 
 services:
+  mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./tmp/storage/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: "keycloak"
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - mysql_network
+
+  cassandra:
+    image: cassandra:latest
+    container_name: my_cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=128M
+    healthcheck:
+      test: [ "CMD", "cqlsh", "-e", "DESCRIBE keyspaces" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  openldap:
+    container_name: openldap
+    image: osixia/openldap:latest
+    environment:
+      LDAP_ORGANISATION: ${LDAP_ORGANISATION}
+      LDAP_DOMAIN: ${LDAP_DOMAIN}
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD}
+      LDAP_CONFIG_PASSWORD: ${LDAP_CONFIG_PASSWORD}
+      LDAP_TLS_VERIFY_CLIENT: "never"
+    volumes:
+      - ./tmp/storage/openldap/ldap_db:/var/lib/ldap
+      - ./tmp/storage/openldap/ldap_config:/etc/ldap/slapd.d
+      - ./tmp/ldap/ldif:/container/documents
+    ports:
+      - "389:389"
+      - "636:636"
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD", "ldapsearch", "-H", "ldap://openldap:389", "-D", "cn=admin,dc=fayardev,dc=com", "-w", "${LDAP_ADMIN_PASSWORD}", "-b", "dc=fayardev,dc=com", "-s", "base", "(objectclass=*)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - openldap_network
+      - user_service_network
+    #entrypoint: ["ldapmodify", "-Y", "EXTERNAL", "-H", "ldap://openldap:389", "-f", "/container/documents/custom-user-details.ldif"]
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    ports:
+      - "8083:443"
+    restart: on-failure
+    depends_on:
+      openldap:
+        condition: service_healthy
+    networks:
+      - openldap_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: "mysql"
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
+    ports:
+      - "8080:80"
+    restart: on-failure
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mysql_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:legacy
+    container_name: keycloak
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./tmp/storage/keycloak/realm-file.json:/opt/jboss/keycloak/standalone/configuration/realm-file.json
+    depends_on:
+      mysql:
+        condition: service_healthy
+      openldap:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://keycloak:8081/auth || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    restart: on-failure
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/realm-file.json"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.provider=singleFile"
+      - "-Dkeycloak.migration.file=/opt/jboss/keycloak/standalone/configuration/realm-file.json"
+      - "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
+    networks:
+      - openldap_network
+      - mysql_network
+      - regms_network
+
+  rabbitmq:
+    image: "rabbitmq:latest"
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+    networks:
+      - regms_network
+
+  zipkin-server:
+    image: openzipkin/zipkin
+    container_name: zipkin-server
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
+    restart: on-failure
+    networks:
+      - regms_network
+
   config-server:
     container_name: config-server
     build:
@@ -13,12 +168,12 @@ services:
       - /tmp
     ports:
       - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
+    restart: always
     healthcheck:
       test: "wget --spider -S ${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/actuator/health/readiness || exit 1"
       interval: 2s
       timeout: 3s
       retries: 15
-    restart: always
     networks:
       - regms_network
 
@@ -74,6 +229,10 @@ services:
     restart: on-failure
     depends_on:
       eureka-server:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      cassandra:
         condition: service_healthy
     networks:
       - regms_network
@@ -238,7 +397,7 @@ services:
     ports:
       - "${SPRING_BOOT_ADMIN_SERVER_PORT}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
     healthcheck:
-      test: "wget --spider -S admin-server:${ADMIN_SERVER_PORT}/actuator/health/readiness || exit 1"
+      test: "wget --spider -S admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}/actuator/health/readiness || exit 1"
       interval: 2s
       timeout: 3s
       retries: 15
@@ -253,3 +412,5 @@ networks:
   regms_network:
     driver: bridge
   user_service_network:
+  openldap_network:
+  mysql_network:
