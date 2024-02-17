@@ -1,6 +1,6 @@
 package com.fayardev.regms.postservice.service;
 
-import com.fayardev.regms.postservice.dto.PostDTO;
+import com.fayardev.regms.postservice.dto.PostDto;
 import com.fayardev.regms.postservice.entity.Post;
 import com.fayardev.regms.postservice.entity.content.Content;
 import com.fayardev.regms.postservice.repository.PostRepository;
@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class PostService implements IPostService<PostDTO> {
+public class PostService implements IPostService<PostDto> {
 
     private final PostRepository repository;
     private final ModelMapper modelMapper;
@@ -29,7 +29,7 @@ public class PostService implements IPostService<PostDTO> {
     }
 
     @Override
-    public PostDTO add(PostDTO postDTO) {
+    public PostDto add(PostDto postDTO) {
         Post post = repository.save(modelMapper.map(postDTO, Post.class));
         postDTO.setId(post.getId());
         return postDTO;
@@ -42,7 +42,7 @@ public class PostService implements IPostService<PostDTO> {
     }
 
     @Override
-    public PostDTO update(PostDTO postDTO) {
+    public PostDto update(PostDto postDTO) {
         Optional<Post> post = repository.findById(postDTO.getId());
         Post updatedPost = post.map(it -> {
             it.setContent(modelMapper.map(postDTO.getContent(), Content.class));
@@ -51,11 +51,11 @@ public class PostService implements IPostService<PostDTO> {
             return it;
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedPost);
-        return modelMapper.map(updatedPost, PostDTO.class);
+        return modelMapper.map(updatedPost, PostDto.class);
     }
 
     @Override
-    public PostDTO visibility(UUID uuid, boolean visible) {
+    public PostDto visibility(UUID uuid, boolean visible) {
         Optional<Post> post = repository.findById(uuid);
         Post updatedPost = post.map(it -> {
             it.setVisible(visible);
@@ -63,19 +63,19 @@ public class PostService implements IPostService<PostDTO> {
             return it;
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedPost);
-        return modelMapper.map(updatedPost, PostDTO.class);
+        return modelMapper.map(updatedPost, PostDto.class);
     }
 
-    public PostDTO get(UUID uuid) {
-        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), PostDTO.class);
+    public PostDto get(UUID uuid) {
+        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), PostDto.class);
     }
 
-    public Slice<PostDTO> getAll(Pageable pageable) {
+    public Slice<PostDto> getAll(Pageable pageable) {
         Slice<Post> posts = repository.findAll(pageable);
-        List<PostDTO> postDTOs = posts
+        List<PostDto> postDTOs = posts
                 .getContent()
                 .stream()
-                .map(post -> modelMapper.map(post, PostDTO.class))
+                .map(post -> modelMapper.map(post, PostDto.class))
                 .collect(Collectors.toList());
 
         return new SliceImpl<>(postDTOs, pageable, posts.hasNext());

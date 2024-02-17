@@ -1,6 +1,6 @@
 package com.fayardev.regms.postservice.service;
 
-import com.fayardev.regms.postservice.dto.ContentDTO;
+import com.fayardev.regms.postservice.dto.ContentDto;
 import com.fayardev.regms.postservice.entity.content.Content;
 import com.fayardev.regms.postservice.repository.ContentRepository;
 import com.fayardev.regms.postservice.service.abstracts.IContentService;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class ContentService implements IContentService<ContentDTO> {
+public class ContentService implements IContentService<ContentDto> {
 
     private final ContentRepository repository;
     private final ModelMapper modelMapper;
@@ -24,7 +24,7 @@ public class ContentService implements IContentService<ContentDTO> {
     }
 
     @Override
-    public ContentDTO add(ContentDTO contentDTO) {
+    public ContentDto add(ContentDto contentDTO) {
         Content content = repository.save(modelMapper.map(contentDTO, Content.class));
         contentDTO.setId(content.getId());
         return contentDTO;
@@ -37,7 +37,7 @@ public class ContentService implements IContentService<ContentDTO> {
     }
 
     @Override
-    public ContentDTO update(ContentDTO contentDTO) {
+    public ContentDto update(ContentDto contentDTO) {
         Optional<Content> content = repository.findById(contentDTO.getId());
         Content contentUpdated = content.map(it -> {
             it.setContentType(contentDTO.getContentType());
@@ -46,16 +46,16 @@ public class ContentService implements IContentService<ContentDTO> {
             return it;
         }).orElseThrow(IllegalAccessError::new);
         repository.save(contentUpdated);
-        return modelMapper.map(contentUpdated, ContentDTO.class);
+        return modelMapper.map(contentUpdated, ContentDto.class);
     }
 
     @Override
-    public ContentDTO get(UUID uuid) {
-        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), ContentDTO.class);
+    public ContentDto get(UUID uuid) {
+        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), ContentDto.class);
     }
 
     @Override
-    public Slice<ContentDTO> getAll(Pageable pageable) {
+    public Slice<ContentDto> getAll(Pageable pageable) {
         return null;
     }
 }

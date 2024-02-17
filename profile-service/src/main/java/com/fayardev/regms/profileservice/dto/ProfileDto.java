@@ -10,10 +10,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public class ProfileDTO extends BaseDTO {
+public class ProfileDto extends BaseDto {
     private UUID uuid;
     private UUID userId;
     private String biography;
-    private SettingsDTO settings;
+    private SettingsDto settings;
     private boolean isPrivate;
 }

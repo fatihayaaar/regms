@@ -8,8 +8,10 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @ToString
-public class FollowDTO {
+public class FollowDto extends BaseDto {
+    private UUID uuid;
     private UUID followerId;
     private UUID followingId;
 }

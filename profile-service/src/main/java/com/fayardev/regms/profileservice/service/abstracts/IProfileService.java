@@ -1,8 +1,6 @@
 package com.fayardev.regms.profileservice.service.abstracts;
 
-import com.fayardev.regms.profileservice.dto.BaseDTO;
+import com.fayardev.regms.profileservice.dto.BaseDto;
 
-import java.util.UUID;
-
-public interface IProfileService<T extends BaseDTO> extends IService<T> {
+public interface IProfileService<T extends BaseDto> extends IService<T> {
 }

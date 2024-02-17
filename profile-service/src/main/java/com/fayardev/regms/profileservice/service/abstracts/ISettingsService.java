@@ -1,6 +1,6 @@
 package com.fayardev.regms.profileservice.service.abstracts;
 
-import com.fayardev.regms.profileservice.dto.BaseDTO;
+import com.fayardev.regms.profileservice.dto.BaseDto;
 
-public interface ISettingsService<T extends BaseDTO> extends IService<T> {
+public interface ISettingsService<T extends BaseDto> extends IService<T> {
 }

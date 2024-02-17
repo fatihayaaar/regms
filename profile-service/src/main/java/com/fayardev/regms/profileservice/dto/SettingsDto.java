@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public class SettingsDTO extends BaseDTO {
+public class SettingsDto extends BaseDto {
     private UUID uuid;
     private UUID profileId;
     private boolean notificationsEnabled;

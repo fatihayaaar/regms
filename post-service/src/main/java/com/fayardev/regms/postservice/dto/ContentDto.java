@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public class ContentDTO extends BaseDTO {
+public class ContentDto extends BaseDto {
     private UUID id;
     private ContentType contentType;
     private String uri;

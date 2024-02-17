@@ -1,6 +1,6 @@
 package com.fayardev.regms.profileservice.service;
 
-import com.fayardev.regms.profileservice.dto.SettingsDTO;
+import com.fayardev.regms.profileservice.dto.SettingsDto;
 import com.fayardev.regms.profileservice.entity.Settings;
 import com.fayardev.regms.profileservice.repository.SettingsRepository;
 import com.fayardev.regms.profileservice.service.abstracts.ISettingsService;
@@ -9,12 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class SettingsService implements ISettingsService<SettingsDTO> {
+public class SettingsService implements ISettingsService<SettingsDto> {
 
     private final SettingsRepository repository;
     private final ModelMapper modelMapper;
@@ -25,7 +24,7 @@ public class SettingsService implements ISettingsService<SettingsDTO> {
     }
 
     @Override
-    public SettingsDTO add(SettingsDTO entity) {
+    public SettingsDto add(SettingsDto entity) {
         Settings settings = repository.save(modelMapper.map(entity, Settings.class));
         entity.setUuid(settings.getUuid());
         return entity;
@@ -38,23 +37,23 @@ public class SettingsService implements ISettingsService<SettingsDTO> {
     }
 
     @Override
-    public SettingsDTO update(SettingsDTO entity) {
+    public SettingsDto update(SettingsDto entity) {
         Optional<Settings> settings = repository.findById(entity.getUuid());
         Settings updatedSettings = settings.map(it -> {
             it.setNotificationsEnabled(entity.isNotificationsEnabled());
             return it;
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedSettings);
-        return modelMapper.map(updatedSettings, SettingsDTO.class);
+        return modelMapper.map(updatedSettings, SettingsDto.class);
     }
 
     @Override
-    public SettingsDTO get(UUID uuid) {
-        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), SettingsDTO.class);
+    public SettingsDto get(UUID uuid) {
+        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), SettingsDto.class);
     }
 
     @Override
-    public Slice<SettingsDTO> getAll(Pageable pageable) {
+    public Slice<SettingsDto> getAll(Pageable pageable) {
         return null;
     }
 }

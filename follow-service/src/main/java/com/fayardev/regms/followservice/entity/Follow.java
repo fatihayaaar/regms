@@ -10,10 +10,12 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @ToString
 @Table("follow")
-public class Follow {
+public class Follow extends BaseEntity {
     @PrimaryKey
+    private UUID uuid;
     private UUID followerId;
     private UUID followingId;
 }

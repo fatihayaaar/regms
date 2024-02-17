@@ -1,6 +1,6 @@
-package com.fayardev.regms.postservice.service.abstracts;
+package com.fayardev.regms.followservice.service.abstracts;
 
-import com.fayardev.regms.postservice.dto.BaseDto;
+import com.fayardev.regms.followservice.dto.BaseDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
