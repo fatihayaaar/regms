@@ -40,12 +40,35 @@ public class FollowService implements IFollowService<FollowDto> {
     public FollowDto update(FollowDto entity) {
         Optional<Follow> post = repository.findById(entity.getUuid());
         Follow updatedFollow = post.map(it -> {
-            it.setFollowerId(entity.getFollowerId());
-            it.setFollowingId(entity.getFollowingId());
+            it.setFollowerUuid(entity.getFollowerId());
+            it.setFollowingUuid(entity.getFollowingId());
             return it;
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedFollow);
         return modelMapper.map(updatedFollow, FollowDto.class);
+    }
+
+    @Override
+    public void follow(UUID followerID, UUID followingID) {
+        Follow follow = repository
+                .getFollowByFollowerIdAndFollowingId(followerID, followingID)
+                .orElseThrow(NullPointerException::new);
+
+        if (follow == null) {
+            FollowDto followDto = FollowDto
+                    .builder()
+                    .followerId(followerID)
+                    .followingId(followingID)
+                    .build();
+            add(followDto);
+        }
+    }
+
+    @Override
+    public void unFollow(UUID followerID, UUID followingID) {
+        repository
+                .getFollowByFollowerIdAndFollowingId(followerID, followingID)
+                .ifPresent(follow -> delete(follow.getUuid()));
     }
 
     @Override

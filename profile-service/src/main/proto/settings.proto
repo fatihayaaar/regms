@@ -1,1 +1,20 @@
 syntax = "proto3";
+option java_multiple_files= true;
+
+package com.fayardev.profileservice.settings;
+
+service SettingsService {
+  rpc GetProfile(SettingsRequest) returns (SettingsResponse);
+}
+
+message SettingsRequest {
+  bytes uuid = 1;
+  string profileUuid = 2;
+  bool notificationsEnabled = 3;
+}
+
+message SettingsResponse {
+  bytes uuid = 1;
+  string profileUuid = 2;
+  bool notificationsEnabled = 3;
+}

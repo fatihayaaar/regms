@@ -1,1 +1,38 @@
 syntax = "proto3";
+option java_multiple_files= true;
+
+package com.fayardev.userservice.user;
+
+service UserService {
+  rpc GetUserByUid(UserRequest) returns (UserResponse);
+}
+
+message UserRequest {
+  string uid = 1;
+  string name = 2;
+  string surname = 3;
+  string email_address = 4;
+  bool confirm = 5;
+  bool is_active = 6;
+  bool verified = 7;
+  string phone_no = 8;
+  string password = 9;
+  string gender = 10;
+  string birth_of_date = 11;
+  bytes jpeg_photo = 12;
+}
+
+message UserResponse {
+  string uid = 1;
+  string name = 2;
+  string surname = 3;
+  string email_address = 4;
+  bool confirm = 5;
+  bool is_active = 6;
+  bool verified = 7;
+  string phone_no = 8;
+  string password = 9;
+  string gender = 10;
+  string birth_of_date = 11;
+  bytes jpeg_photo = 12;
+}

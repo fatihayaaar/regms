@@ -16,6 +16,6 @@ import java.util.UUID;
 public class Follow extends BaseEntity {
     @PrimaryKey
     private UUID uuid;
-    private UUID followerId;
-    private UUID followingId;
+    private UUID followerUuid;
+    private UUID followingUuid;
 }

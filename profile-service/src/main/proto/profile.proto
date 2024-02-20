@@ -1,16 +1,22 @@
 syntax = "proto3";
+option java_multiple_files= true;
 
-package profiles;
+package com.fayardev.profileservice.profile;
 
 service ProfileService {
   rpc GetProfile(ProfileRequest) returns (ProfileResponse);
 }
 
 message ProfileRequest {
-  string userId = 1;
+  bytes uuid = 1;
+  bytes userUuid = 2;
+  string biography = 3;
+  bool isPrivate = 4;
 }
 
 message ProfileResponse {
-  string userId = 1;
-  string biography = 2;
+  bytes uuid = 1;
+  bytes userUuid = 2;
+  string biography = 3;
+  bool isPrivate = 4;
 }

@@ -28,6 +28,7 @@ public class PostService implements IPostService<PostDto> {
         this.modelMapper = modelMapper;
     }
 
+
     @Override
     public PostDto add(PostDto postDTO) {
         Post post = repository.save(modelMapper.map(postDTO, Post.class));

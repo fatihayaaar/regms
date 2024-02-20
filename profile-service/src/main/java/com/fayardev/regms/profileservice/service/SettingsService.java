@@ -24,6 +24,16 @@ public class SettingsService implements ISettingsService<SettingsDto> {
     }
 
     @Override
+    public void changeNotificationsEnabled(UUID uuid, boolean notificationsEnabled) {
+        Optional<Settings> settings = repository.findById(uuid);
+        Settings updatedSettings = settings.map(it -> {
+            it.setNotificationsEnabled(notificationsEnabled);
+            return it;
+        }).orElseThrow(IllegalArgumentException::new);
+        repository.save(updatedSettings);
+    }
+
+    @Override
     public SettingsDto add(SettingsDto entity) {
         Settings settings = repository.save(modelMapper.map(entity, Settings.class));
         entity.setUuid(settings.getUuid());

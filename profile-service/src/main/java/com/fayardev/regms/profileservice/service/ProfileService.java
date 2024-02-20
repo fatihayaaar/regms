@@ -25,6 +25,26 @@ public class ProfileService implements IProfileService<ProfileDto> {
     }
 
     @Override
+    public void changeBiography(UUID uuid, String biography) {
+        Optional<Profile> profile = repository.findById(uuid);
+        Profile updatedProfile = profile.map(it -> {
+            it.setBiography(biography);
+            return it;
+        }).orElseThrow(IllegalArgumentException::new);
+        repository.save(updatedProfile);
+    }
+
+    @Override
+    public void changeIsPrivate(UUID uuid, boolean isPrivate) {
+        Optional<Profile> profile = repository.findById(uuid);
+        Profile updatedProfile = profile.map(it -> {
+            it.setPrivate(isPrivate);
+            return it;
+        }).orElseThrow(IllegalArgumentException::new);
+        repository.save(updatedProfile);
+    }
+
+    @Override
     public ProfileDto add(ProfileDto entity) {
         Profile profile = repository.save(modelMapper.map(entity, Profile.class));
         entity.setUuid(profile.getUuid());
