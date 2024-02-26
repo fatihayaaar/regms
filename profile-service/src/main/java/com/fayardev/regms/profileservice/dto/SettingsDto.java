@@ -12,6 +12,6 @@ import java.util.UUID;
 @ToString
 public class SettingsDto extends BaseDto {
     private UUID uuid;
-    private UUID profileId;
+    private UUID profileUuid;
     private boolean notificationsEnabled;
 }

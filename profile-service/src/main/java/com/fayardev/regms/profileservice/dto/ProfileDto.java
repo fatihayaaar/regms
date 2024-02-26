@@ -12,8 +12,8 @@ import java.util.UUID;
 @ToString
 public class ProfileDto extends BaseDto {
     private UUID uuid;
-    private UUID userId;
+    private UUID userUuid;
     private String biography;
-    private SettingsDto settings;
+    private UUID settingsUuid;
     private boolean isPrivate;
 }

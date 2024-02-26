@@ -14,10 +14,11 @@ import java.util.UUID;
 @ToString
 @Table("profile")
 public class Profile extends BaseEntity {
+
     @PrimaryKey
     private UUID uuid;
-    private UUID userId;
+    private UUID userUuid;
     private String biography;
-    private Settings settings;
+    private UUID settingsUuid;
     private boolean isPrivate;
 }

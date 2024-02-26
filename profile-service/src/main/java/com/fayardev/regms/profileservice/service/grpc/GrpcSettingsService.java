@@ -1,7 +1,7 @@
 package com.fayardev.regms.profileservice.service.grpc;
 
+import com.fayardev.profileservice.settings.SettingsServiceGrpc;
 import com.fayardev.regms.profileservice.repository.SettingsRepository;
-import com.fayardev.settings.SettingsServiceGrpc;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

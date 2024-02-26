@@ -1,5 +1,6 @@
 package com.fayardev.regms.profileservice.controller;
 
+import com.fayardev.regms.profileservice.dto.ProfileDto;
 import com.fayardev.regms.profileservice.service.ProfileService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,10 @@ public class ProfileController {
     public ResponseEntity<?> changeIsPrivate(@RequestBody boolean isPrivate) {
         service.changeIsPrivate(UUID.randomUUID(), isPrivate);
         return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestBody ProfileDto profileDto) {
+        return ResponseEntity.ok(service.add(profileDto));
     }
 }

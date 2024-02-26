@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/settings")
 public class SettingsController {
 
     private final SettingsService service;

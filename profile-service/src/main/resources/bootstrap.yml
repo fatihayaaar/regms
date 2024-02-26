@@ -1,7 +1,14 @@
 spring:
+  data:
+    cassandra:
+      keyspace: regms_profile
   application:
     name: profile-service
   cloud:
     config:
       profile: native
       uri: ${CONFIG_SERVER_URL:http://localhost:8888}
+  cassandra:
+    schema-action: CREATE_IF_NOT_EXISTS
+    port: 9142
+    contact-points: 127.0.0.1

@@ -62,7 +62,7 @@ public class ProfileService implements IProfileService<ProfileDto> {
         Optional<Profile> profile = repository.findById(entity.getUuid());
         Profile updatedProfile = profile.map(it -> {
             it.setBiography(entity.getBiography());
-            it.setSettings(modelMapper.map(entity.getSettings(), Settings.class));
+            it.setSettingsUuid(entity.getSettingsUuid());
             it.setPrivate(entity.isPrivate());
             return it;
         }).orElseThrow(IllegalAccessError::new);
