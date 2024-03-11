@@ -8,18 +8,16 @@ import com.fayardev.userservice.user.UserServiceGrpc;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
 
     private final UserRepository repository;
-
-    public GrpcUserService(UserRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public void getUserByUid(UserRequest request, StreamObserver<UserResponse> responseObserver) {

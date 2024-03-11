@@ -12,9 +12,9 @@ import java.io.IOException;
 public class GrpcConfig {
 
     @Bean
-    public Server grpcServer(GrpcUserService service) throws IOException {
+    public Server grpcServer(GrpcUserService service) {
         ServerBuilder<?> server = ServerBuilder
-                .forPort(9090)
+                .forPort(1212)
                 .addService(service);
 
         return server.build();

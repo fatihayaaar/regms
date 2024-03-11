@@ -11,7 +11,8 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class FollowDto extends BaseDto {
-    private UUID uuid;
+
+    private UUID id;
     private UUID followerId;
     private UUID followingId;
 }

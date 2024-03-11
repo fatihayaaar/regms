@@ -2,9 +2,9 @@ package com.fayardev.regms.profileservice.service;
 
 import com.fayardev.regms.profileservice.dto.ProfileDto;
 import com.fayardev.regms.profileservice.entity.Profile;
-import com.fayardev.regms.profileservice.entity.Settings;
 import com.fayardev.regms.profileservice.repository.ProfileRepository;
 import com.fayardev.regms.profileservice.service.abstracts.IProfileService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -14,19 +14,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileService implements IProfileService<ProfileDto> {
 
     private final ProfileRepository repository;
     private final ModelMapper modelMapper;
 
-    public ProfileService(ProfileRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
-    public void changeBiography(UUID uuid, String biography) {
-        Optional<Profile> profile = repository.findById(uuid);
+    public void changeBiography(UUID id, String biography) {
+        Optional<Profile> profile = repository.findById(id);
         Profile updatedProfile = profile.map(it -> {
             it.setBiography(biography);
             return it;
@@ -35,8 +31,8 @@ public class ProfileService implements IProfileService<ProfileDto> {
     }
 
     @Override
-    public void changeIsPrivate(UUID uuid, boolean isPrivate) {
-        Optional<Profile> profile = repository.findById(uuid);
+    public void changeIsPrivate(UUID id, boolean isPrivate) {
+        Optional<Profile> profile = repository.findById(id);
         Profile updatedProfile = profile.map(it -> {
             it.setPrivate(isPrivate);
             return it;
@@ -47,22 +43,22 @@ public class ProfileService implements IProfileService<ProfileDto> {
     @Override
     public ProfileDto add(ProfileDto entity) {
         Profile profile = repository.save(modelMapper.map(entity, Profile.class));
-        entity.setUuid(profile.getUuid());
+        entity.setId(profile.getId());
         return entity;
     }
 
     @Override
-    public void delete(UUID uuid) {
-        Profile profile = repository.findById(uuid).orElseThrow(IllegalArgumentException::new);
+    public void delete(UUID id) {
+        Profile profile = repository.findById(id).orElseThrow(IllegalArgumentException::new);
         repository.delete(profile);
     }
 
     @Override
     public ProfileDto update(ProfileDto entity) {
-        Optional<Profile> profile = repository.findById(entity.getUuid());
+        Optional<Profile> profile = repository.findById(entity.getId());
         Profile updatedProfile = profile.map(it -> {
             it.setBiography(entity.getBiography());
-            it.setSettingsUuid(entity.getSettingsUuid());
+            it.setSettingsId(entity.getSettingsId());
             it.setPrivate(entity.isPrivate());
             return it;
         }).orElseThrow(IllegalAccessError::new);
@@ -71,8 +67,8 @@ public class ProfileService implements IProfileService<ProfileDto> {
     }
 
     @Override
-    public ProfileDto get(UUID uuid) {
-        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), ProfileDto.class);
+    public ProfileDto get(UUID id) {
+        return modelMapper.map(repository.findById(id).orElseThrow(IllegalAccessError::new), ProfileDto.class);
     }
 
     @Override

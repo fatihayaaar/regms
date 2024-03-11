@@ -4,6 +4,7 @@ import com.fayardev.regms.postservice.dto.ContentDto;
 import com.fayardev.regms.postservice.entity.content.Content;
 import com.fayardev.regms.postservice.repository.ContentRepository;
 import com.fayardev.regms.postservice.service.abstracts.IContentService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,15 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ContentService implements IContentService<ContentDto> {
 
     private final ContentRepository repository;
     private final ModelMapper modelMapper;
-
-    public ContentService(ContentRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public ContentDto add(ContentDto contentDTO) {
@@ -31,8 +28,8 @@ public class ContentService implements IContentService<ContentDto> {
     }
 
     @Override
-    public void delete(UUID uuid) {
-        Content content = repository.findById(uuid).orElseThrow(IllegalArgumentException::new);
+    public void delete(UUID id) {
+        Content content = repository.findById(id).orElseThrow(IllegalArgumentException::new);
         repository.delete(content);
     }
 
@@ -50,8 +47,8 @@ public class ContentService implements IContentService<ContentDto> {
     }
 
     @Override
-    public ContentDto get(UUID uuid) {
-        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), ContentDto.class);
+    public ContentDto get(UUID id) {
+        return modelMapper.map(repository.findById(id).orElseThrow(IllegalAccessError::new), ContentDto.class);
     }
 
     @Override

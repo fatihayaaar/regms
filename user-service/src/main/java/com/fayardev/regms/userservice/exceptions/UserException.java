@@ -2,7 +2,11 @@ package com.fayardev.regms.userservice.exceptions;
 
 import com.fayardev.regms.userservice.exceptions.enums.ErrorComponents;
 import com.fayardev.regms.userservice.exceptions.enums.Errors;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UserException extends Exception {
 
     public static final String NAME = "UserException";
@@ -23,21 +27,5 @@ public class UserException extends Exception {
     @Override
     public String getMessage() {
         return this.message;
-    }
-
-    public Errors getError() {
-        return error;
-    }
-
-    public void setError(Errors error) {
-        this.error = error;
-    }
-
-    public ErrorComponents getErrorComponent() {
-        return errorComponent;
-    }
-
-    public void setErrorComponent(ErrorComponents errorComponent) {
-        this.errorComponent = errorComponent;
     }
 }

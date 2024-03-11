@@ -11,7 +11,8 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class SettingsDto extends BaseDto {
-    private UUID uuid;
-    private UUID profileUuid;
+
+    private UUID id;
+    private UUID profileId;
     private boolean notificationsEnabled;
 }

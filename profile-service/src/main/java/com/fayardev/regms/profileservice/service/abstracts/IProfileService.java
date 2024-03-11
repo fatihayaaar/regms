@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface IProfileService<T extends BaseDto> extends IService<T> {
 
-    void changeBiography(UUID uuid, String biography);
+    void changeBiography(UUID id, String biography);
 
-    void changeIsPrivate(UUID uuid, boolean isPrivate);
+    void changeIsPrivate(UUID id, boolean isPrivate);
 }

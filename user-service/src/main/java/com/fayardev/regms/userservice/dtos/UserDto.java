@@ -2,18 +2,16 @@ package com.fayardev.regms.userservice.dtos;
 
 import com.fayardev.regms.userservice.entities.User;
 import com.fayardev.regms.userservice.validates.UserValidate;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class UserDto {
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+public class UserDto extends BaseDto {
 
     @NotEmpty
     @NotBlank

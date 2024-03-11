@@ -1,6 +1,7 @@
 package com.fayardev.regms.userservice.controllers;
 
 import com.fayardev.regms.userservice.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,14 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/validate")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public class ValidateController {
 
     private final UserService userService;
-
-    @Autowired
-    public ValidateController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<Boolean> isThereUsername(@PathVariable String username) {

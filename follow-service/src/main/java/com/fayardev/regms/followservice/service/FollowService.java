@@ -4,6 +4,7 @@ import com.fayardev.regms.followservice.dto.FollowDto;
 import com.fayardev.regms.followservice.entity.Follow;
 import com.fayardev.regms.followservice.repository.FollowRepository;
 import com.fayardev.regms.followservice.service.abstracts.IFollowService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,35 +14,31 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FollowService implements IFollowService<FollowDto> {
 
     private final FollowRepository repository;
     private final ModelMapper modelMapper;
 
-    public FollowService(FollowRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     public FollowDto add(FollowDto entity) {
         Follow follow = repository.save(modelMapper.map(entity, Follow.class));
-        entity.setUuid(follow.getUuid());
+        entity.setId(follow.getId());
         return entity;
     }
 
     @Override
-    public void delete(UUID uuid) {
-        Follow follow = repository.findById(uuid).orElseThrow(IllegalArgumentException::new);
+    public void delete(UUID id) {
+        Follow follow = repository.findById(id).orElseThrow(IllegalArgumentException::new);
         repository.delete(follow);
     }
 
     @Override
     public FollowDto update(FollowDto entity) {
-        Optional<Follow> post = repository.findById(entity.getUuid());
+        Optional<Follow> post = repository.findById(entity.getId());
         Follow updatedFollow = post.map(it -> {
-            it.setFollowerUuid(entity.getFollowerId());
-            it.setFollowingUuid(entity.getFollowingId());
+            it.setFollowerId(entity.getFollowerId());
+            it.setFollowingId(entity.getFollowingId());
             return it;
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedFollow);
@@ -68,12 +65,12 @@ public class FollowService implements IFollowService<FollowDto> {
     public void unFollow(UUID followerID, UUID followingID) {
         repository
                 .getFollowByFollowerIdAndFollowingId(followerID, followingID)
-                .ifPresent(follow -> delete(follow.getUuid()));
+                .ifPresent(follow -> delete(follow.getId()));
     }
 
     @Override
-    public FollowDto get(UUID uuid) {
-        return modelMapper.map(repository.findById(uuid).orElseThrow(IllegalAccessError::new), FollowDto.class);
+    public FollowDto get(UUID id) {
+        return modelMapper.map(repository.findById(id).orElseThrow(IllegalAccessError::new), FollowDto.class);
     }
 
     @Override

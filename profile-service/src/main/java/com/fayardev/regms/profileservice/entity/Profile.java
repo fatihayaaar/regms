@@ -16,9 +16,9 @@ import java.util.UUID;
 public class Profile extends BaseEntity {
 
     @PrimaryKey
-    private UUID uuid;
-    private UUID userUuid;
+    private UUID id;
+    private UUID userId;
     private String biography;
-    private UUID settingsUuid;
+    private UUID settingsId;
     private boolean isPrivate;
 }

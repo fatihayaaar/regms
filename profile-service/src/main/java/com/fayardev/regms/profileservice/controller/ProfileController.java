@@ -2,20 +2,17 @@ package com.fayardev.regms.profileservice.controller;
 
 import com.fayardev.regms.profileservice.dto.ProfileDto;
 import com.fayardev.regms.profileservice.service.ProfileService;
-import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService service;
-
-    public ProfileController(ProfileService service) {
-        this.service = service;
-    }
 
     @GetMapping("/my")
     public ResponseEntity<?> getMyProfile() {
@@ -23,7 +20,7 @@ public class ProfileController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getProfile(@PathVariable @NotNull String username) {
+    public ResponseEntity<?> getProfile(@PathVariable String username) {
         return ResponseEntity.ok(service.get(UUID.randomUUID()));
     }
 

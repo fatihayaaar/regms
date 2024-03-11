@@ -9,20 +9,17 @@ import com.fayardev.regms.userservice.exceptions.enums.ErrorComponents;
 import com.fayardev.regms.userservice.repositories.UserRepository;
 import com.fayardev.regms.userservice.services.abstracts.IUserService;
 import com.fayardev.regms.userservice.validates.UserValidate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService extends BaseService<User> implements IUserService<User> {
 
     private final UserRepository repository;
-
-    @Autowired
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public boolean saveEntity(User entity) throws Exception {

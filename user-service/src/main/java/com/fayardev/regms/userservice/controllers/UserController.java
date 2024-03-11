@@ -6,6 +6,7 @@ import com.fayardev.regms.userservice.entities.User;
 import com.fayardev.regms.userservice.exceptions.UserException;
 import com.fayardev.regms.userservice.services.UserService;
 import com.fayardev.regms.userservice.validates.UserValidate;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,23 +16,16 @@ import javax.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public final class UserController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper) {
-        this.userService = userService;
-        this.modelMapper = modelMapper;
-    }
-
     @PostMapping("/register")
     public ResponseEntity<?> signUp(@RequestBody @Valid UserDto userDto) throws Exception {
-        if (!UserValidate.passwordLengthValidate(userDto.getPassword())) {
-            if (!UserValidate.passwordValidate(userDto.getPassword())) {
+        if (!UserValidate.passwordLengthValidate(userDto.getPassword()) && (!UserValidate.passwordValidate(userDto.getPassword()))) {
                 return ResponseEntity.ok(false);
-            }
         }
         return ResponseEntity.ok(userService.saveEntity(modelMapper.map(userDto, User.class)));
     }

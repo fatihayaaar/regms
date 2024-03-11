@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Getter
 public abstract class BaseEntity implements Serializable {
 
-    protected Long ID;
+    protected Long id;
 
     protected BaseEntity() {
         super();

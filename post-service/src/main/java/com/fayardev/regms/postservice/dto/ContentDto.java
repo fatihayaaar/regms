@@ -12,6 +12,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class ContentDto extends BaseDto {
+
     private UUID id;
     private ContentType contentType;
     private String uri;

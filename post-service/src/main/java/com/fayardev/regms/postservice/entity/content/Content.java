@@ -15,6 +15,7 @@ import java.util.UUID;
 @ToString
 @Table("content")
 public class Content extends BaseEntity {
+
     @PrimaryKey
     private UUID id;
     private ContentType contentType;

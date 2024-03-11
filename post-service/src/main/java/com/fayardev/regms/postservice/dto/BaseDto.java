@@ -1,4 +1,6 @@
 package com.fayardev.regms.postservice.dto;
 
-public class BaseDto {
+import java.io.Serializable;
+
+public class BaseDto implements Serializable {
 }

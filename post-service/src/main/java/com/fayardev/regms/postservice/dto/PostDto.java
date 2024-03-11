@@ -12,9 +12,10 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class PostDto extends BaseDto {
+
     private UUID id;
     private UUID userId;
-    private ContentDto content;
+    private int contentId;
     private Date createdDate;
     private Date updatedDate;
     private int likeCount;

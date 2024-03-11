@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Settings extends BaseEntity {
 
     @PrimaryKey
-    private UUID uuid;
-    private UUID profileUuid;
+    private UUID id;
+    private UUID profileId;
     private boolean notificationsEnabled;
 }

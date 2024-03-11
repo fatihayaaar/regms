@@ -1,4 +1,4 @@
-package com.fayardev.regms.profileservice.dto;
+package com.fayardev.regms.userservice.dtos;
 
 import java.io.Serializable;
 

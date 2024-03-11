@@ -42,10 +42,10 @@ dependencies {
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'jakarta.servlet:jakarta.servlet-api'
 
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
-    testCompileOnly 'org.projectlombok:lombok:1.18.28'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     implementation 'org.aspectj:aspectjweaver:1.9.9.1'
     implementation 'org.aspectj:aspectjrt:1.9.9.1'

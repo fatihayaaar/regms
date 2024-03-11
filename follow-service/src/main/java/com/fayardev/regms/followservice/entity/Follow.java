@@ -14,8 +14,9 @@ import java.util.UUID;
 @ToString
 @Table("follow")
 public class Follow extends BaseEntity {
+
     @PrimaryKey
-    private UUID uuid;
-    private UUID followerUuid;
-    private UUID followingUuid;
+    private UUID id;
+    private UUID followerId;
+    private UUID followingId;
 }

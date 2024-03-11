@@ -1,9 +1,7 @@
 package com.fayardev.regms.profileservice.controller;
 
 import com.fayardev.regms.profileservice.service.SettingsService;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.context.SmartLifecycle;
-import org.springframework.http.RequestEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,13 +9,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/settings")
+@RequiredArgsConstructor
 public class SettingsController {
 
     private final SettingsService service;
-
-    public SettingsController(SettingsService service) {
-        this.service = service;
-    }
 
     @GetMapping("/my")
     public ResponseEntity<?> getMySettings() {
@@ -25,7 +20,7 @@ public class SettingsController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getSettings(@PathVariable @NotNull String username) {
+    public ResponseEntity<?> getSettings(@PathVariable String username) {
         return ResponseEntity.ok(service.get(UUID.randomUUID()));
     }
 

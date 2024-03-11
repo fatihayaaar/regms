@@ -1,18 +1,17 @@
 package com.fayardev.regms.userservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.ldap.odm.annotations.*;
 
 import javax.naming.Name;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entry(objectClasses = {"inetOrgPerson", "top"}, base = "ou=users")
 public class User extends BaseEntity {
 
@@ -64,9 +63,4 @@ public class User extends BaseEntity {
 
     @Attribute(name = "jpegPhoto")
     private byte[] jpegPhoto;
-
-    @Override
-    public String toString() {
-        return null;
-    }
 }

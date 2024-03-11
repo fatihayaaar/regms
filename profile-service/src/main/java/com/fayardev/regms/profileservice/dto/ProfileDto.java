@@ -11,9 +11,10 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class ProfileDto extends BaseDto {
-    private UUID uuid;
-    private UUID userUuid;
+
+    private UUID id;
+    private UUID userId;
     private String biography;
-    private UUID settingsUuid;
+    private UUID settingsId;
     private boolean isPrivate;
 }

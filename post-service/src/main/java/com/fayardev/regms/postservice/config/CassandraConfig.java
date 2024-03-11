@@ -1,4 +1,4 @@
-package com.fayardev.regms.followservice.config;
+package com.fayardev.regms.postservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 
 @Configuration
 @RequiredArgsConstructor
-@EnableCassandraRepositories(basePackages = "com.fayardev.regms.followservice.repository")
+@EnableCassandraRepositories(basePackages = "com.fayardev.regms.postservice.repository")
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
     private final Environment environment;

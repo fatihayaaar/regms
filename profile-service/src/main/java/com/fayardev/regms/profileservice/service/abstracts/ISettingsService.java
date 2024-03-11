@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface ISettingsService<T extends BaseDto> extends IService<T> {
 
-    void changeNotificationsEnabled(UUID uuid, boolean notificationsEnabled);
+    void changeNotificationsEnabled(UUID id, boolean notificationsEnabled);
 }

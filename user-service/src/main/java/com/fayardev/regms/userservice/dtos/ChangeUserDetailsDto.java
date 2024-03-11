@@ -1,15 +1,15 @@
 package com.fayardev.regms.userservice.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
-@Getter
-public class ChangeUserDetailsDto {
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChangeUserDetailsDto extends BaseDto {
 
     private String username;
-
     private String firstname;
-
     private String surname;
 }

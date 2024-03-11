@@ -16,10 +16,11 @@ import java.util.UUID;
 @ToString
 @Table("post")
 public class Post extends BaseEntity {
+
     @PrimaryKey
     private UUID id;
     private UUID userId;
-    private Content content;
+    private int contentId;
     private Date createdDate;
     private Date updatedDate;
     private int likeCount;

@@ -10,11 +10,11 @@ public interface IService<T extends BaseDto> {
 
     T add(T entity);
 
-    void delete(UUID uuid);
+    void delete(UUID id);
 
     T update(T entity);
 
-    T get(UUID uuid);
+    T get(UUID id);
 
     Slice<T> getAll(Pageable pageable);
 }
