@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.9"
 
 services:
   mysql:
@@ -108,6 +108,7 @@ services:
       - "8081:8080"
     volumes:
       - ./tmp/storage/keycloak/realm-file.json:/opt/jboss/keycloak/standalone/configuration/realm-file.json
+      - ./keycloak/theme/regms-theme:/opt/jboss/keycloak/themes/regms-theme
     depends_on:
       mysql:
         condition: service_healthy
@@ -155,7 +156,7 @@ services:
       - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
     restart: always
     healthcheck:
-      test: "wget --spider -S ${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/actuator/health/readiness || exit 1"
+      test: [ "CMD-SHELL", "wget --spider -S ${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/actuator/health/readiness || exit 1" ]
       interval: 2s
       timeout: 3s
       retries: 15
