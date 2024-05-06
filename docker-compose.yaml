@@ -2,8 +2,7 @@ version: "3.3"
 
 services:
   mysql:
-    platform: linux/x86_64
-    image: mysql:5.7
+    image: mysql:latest
     container_name: mysql
     ports:
       - "3306:3306"
@@ -119,7 +118,6 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-    restart: on-failure
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/realm-file.json"
@@ -130,19 +128,6 @@ services:
     networks:
       - openldap_network
       - mysql_network
-      - regms_network
-
-  rabbitmq:
-    image: "rabbitmq:latest"
-    container_name: rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    restart: always
-    networks:
       - regms_network
 
   zipkin-server:
@@ -410,7 +395,6 @@ services:
 
 networks:
   regms_network:
-    driver: bridge
   user_service_network:
   openldap_network:
   mysql_network:
