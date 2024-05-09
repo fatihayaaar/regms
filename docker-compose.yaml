@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./tmp/storage/mysql:/var/lib/mysql
+      - ./storage/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: "keycloak"
@@ -46,13 +46,14 @@ services:
       LDAP_CONFIG_PASSWORD: ${LDAP_CONFIG_PASSWORD}
       LDAP_TLS_VERIFY_CLIENT: "never"
     volumes:
-      - ./tmp/storage/openldap/ldap_db:/var/lib/ldap
-      - ./tmp/storage/openldap/ldap_config:/etc/ldap/slapd.d
-      - ./tmp/ldap/ldif:/container/documents
+      - ./storage/openldap/ldap_db:/var/lib/ldap
+      - ./storage/openldap/ldap_config:/etc/ldap/slapd.d
+      - ./ldap/ldif:/container/documents/ldif
+      - ./ldap/script:/container/documents/script
     ports:
       - "389:389"
       - "636:636"
-    restart: on-failure
+    restart: no
     healthcheck:
       test: [ "CMD", "ldapsearch", "-H", "ldap://openldap:389", "-D", "cn=admin,dc=fayardev,dc=com", "-w", "${LDAP_ADMIN_PASSWORD}", "-b", "dc=fayardev,dc=com", "-s", "base", "(objectclass=*)" ]
       interval: 10s
@@ -61,7 +62,6 @@ services:
     networks:
       - openldap_network
       - user_service_network
-    #entrypoint: ["ldapmodify", "-Y", "EXTERNAL", "-H", "ldap://openldap:389", "-f", "/container/documents/custom-user-details.ldif"]
 
   phpldapadmin:
     image: osixia/phpldapadmin:0.9.0
@@ -107,7 +107,7 @@ services:
     ports:
       - "8081:8080"
     volumes:
-      - ./tmp/storage/keycloak/realm-file.json:/opt/jboss/keycloak/standalone/configuration/realm-file.json
+      - ./keycloak/realm/keycloak/realm-file.json:/opt/jboss/keycloak/standalone/configuration/realm-file.json
       - ./keycloak/theme/regms-theme:/opt/jboss/keycloak/themes/regms-theme
     depends_on:
       mysql:
@@ -387,7 +387,7 @@ services:
       interval: 2s
       timeout: 3s
       retries: 15
-    restart: on-failure
+    restart: no
     depends_on:
       gateway-server:
         condition: service_healthy

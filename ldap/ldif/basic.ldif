@@ -1,0 +1,56 @@
+version: 1
+
+# Entry 1: dc=fayardev,dc=com
+dn: dc=fayardev,dc=com
+dc: fayardev
+o: fayardev
+objectclass: top
+objectclass: dcObject
+objectclass: organization
+
+# Entry 2: cn=admin,dc=fayardev,dc=com
+dn: cn=admin,dc=fayardev,dc=com
+cn: admin
+objectclass: organizationalRole
+objectclass: top
+
+# Entry 3: ou=groups,dc=fayardev,dc=com
+dn: ou=groups,dc=fayardev,dc=com
+objectclass: organizationalUnit
+objectclass: top
+ou: groups
+
+# Entry 4: cn=admin,ou=groups,dc=fayardev,dc=com
+dn: cn=admin,ou=groups,dc=fayardev,dc=com
+cn: admin
+member: uid=fayar,ou=users,dc=fayardev,dc=com
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 5: cn=user,ou=groups,dc=fayardev,dc=com
+dn: cn=user,ou=groups,dc=fayardev,dc=com
+cn: user
+member: uid=fayar,ou=users,dc=fayardev,dc=com
+member: uid=fetihakderin,ou=users,dc=fayardev,dc=com
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 6: ou=users,dc=fayardev,dc=com
+dn: ou=users,dc=fayardev,dc=com
+objectclass: organizationalUnit
+objectclass: top
+ou: users
+
+# Entry 7: uid=berkcanoz,ou=users,dc=fayardev,dc=com
+dn: uid=berkcanoz,ou=users,dc=fayardev,dc=com
+cn: berkcan
+confirm: TRUE
+gender: male
+isactive: TRUE
+mail: berkcanoz@mail.com
+objectclass: inetOrgPerson
+objectclass: top
+sn:: w7Z6
+uid: berkcanoz
+userpassword: {MD5}4QrcOUm6Wau+VuBX8g+IPg==
+verified: FALSE
