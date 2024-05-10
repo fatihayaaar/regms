@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./storage/mysql:/var/lib/mysql
+      - ./volume/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: "keycloak"
@@ -46,8 +46,8 @@ services:
       LDAP_CONFIG_PASSWORD: ${LDAP_CONFIG_PASSWORD}
       LDAP_TLS_VERIFY_CLIENT: "never"
     volumes:
-      - ./storage/openldap/ldap_db:/var/lib/ldap
-      - ./storage/openldap/ldap_config:/etc/ldap/slapd.d
+      - ./volume/openldap/ldap_db:/var/lib/ldap
+      - ./volume/openldap/ldap_config:/etc/ldap/slapd.d
       - ./ldap/ldif:/container/documents/ldif
       - ./ldap/script:/container/documents/script
     ports:

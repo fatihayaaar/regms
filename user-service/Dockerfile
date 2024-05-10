@@ -1,4 +1,4 @@
-FROM amazoncorretto:19.0.2-alpine3.17
+FROM amazoncorretto:19
 
 WORKDIR /app
 COPY build/libs/user-service-1.0.jar user-service.jar
