@@ -26,6 +26,9 @@ public class User extends BaseEntity {
     @Id
     private Name dn;
 
+    @Attribute(name = "uuid")
+    private String uuid;
+
     @Attribute(name = "uid")
     @DnAttribute(value = "uid", index = 1)
     private String uid;

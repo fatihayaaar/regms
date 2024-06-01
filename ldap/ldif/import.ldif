@@ -1,0 +1,45 @@
+dn: cn=admin,dc=fayardev,dc=com
+changetype: add
+cn: admin
+objectclass: organizationalRole
+objectclass: top
+
+dn: ou=groups,dc=fayardev,dc=com
+changetype: add
+objectclass: organizationalUnit
+objectclass: top
+ou: groups
+
+dn: cn=admin,ou=groups,dc=fayardev,dc=com
+changetype: add
+cn: admin
+member: uid=fayar,ou=users,dc=fayardev,dc=com
+objectclass: groupOfNames
+objectclass: top
+
+dn: cn=user,ou=groups,dc=fayardev,dc=com
+changetype: add
+cn: user
+member: uid=fayar,ou=users,dc=fayardev,dc=com
+objectclass: groupOfNames
+objectclass: top
+
+dn: ou=users,dc=fayardev,dc=com
+changetype: add
+objectclass: organizationalUnit
+objectclass: top
+ou: users
+
+dn: uid=fayar,ou=users,dc=fayardev,dc=com
+changetype: add
+cn: fatih
+confirm: TRUE
+gender: male
+isactive: TRUE
+mail: fatihayaaar@gmail.com
+objectclass: inetOrgPerson
+objectclass: top
+sn: ayar
+uid: fayar
+userpassword: {MD5}4QrcOUm6Wau+VuBX8g+IPg==
+verified: FALSE

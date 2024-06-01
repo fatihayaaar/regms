@@ -15,6 +15,10 @@ public class UserDto extends BaseDto {
 
     @NotEmpty
     @NotBlank
+    private String uuid;
+
+    @NotEmpty
+    @NotBlank
     @Size(min = User.USERNAME_MIN_LENGTH, max = User.USERNAME_MAX_LENGTH)
     @Pattern(regexp = UserValidate.USERNAME_PATTERN)
     private String uid;
