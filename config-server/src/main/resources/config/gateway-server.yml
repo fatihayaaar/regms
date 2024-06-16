@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:0}
+  port: ${SERVER_PORT:8180}
 
 eureka:
   client:
@@ -43,13 +43,16 @@ spring:
             user-name-attribute: preferred_username
         registration:
           keycloak:
-            client-id: ${KEYCLOAK_CLIENT_ID:regms-login}
-            client-secret: ${KEYCLOAK_CLIENT_SECRET:xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m}
+            client-id: ${KEYCLOAK_CLIENT_ID:regms-client}
+            #client-secret: ${KEYCLOAK_CLIENT_SECRET:xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m}
             client-name: Keycloak
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "http://localhost:4200/"
             scope:
               - openid
+    permit-all:
+      urls: /user/v1/public/**, /public/**
+
 springdoc:
   swagger-ui:
     urls:

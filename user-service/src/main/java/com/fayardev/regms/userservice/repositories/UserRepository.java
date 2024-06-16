@@ -14,4 +14,6 @@ public interface UserRepository extends LdapRepository<User> {
     Optional<User> getUserByUid(String username);
 
     void deleteUserByUid(String username);
+
+    void deleteUserByUuid(String uuid);
 }

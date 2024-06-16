@@ -52,7 +52,7 @@
                         </button>
                     </div>
                     <div class="bottom-text">
-                        <p class="mb-0 mt-4 register-account-text">Don't have an account? <p class="form-url">Click here to sign up</p></p>
+                        <p class="mb-0 mt-4 register-account-text">Don't have an account? <a href="http://localhost:4200/register" class="form-url">Click here to sign up</a></p>
                     </div>
                 </form>
             </div>

@@ -2,122 +2,97 @@ package com.fayardev.regms.userservice.validates;
 
 import com.fayardev.regms.userservice.entities.User;
 import com.fayardev.regms.userservice.exceptions.UserException;
-import com.fayardev.regms.userservice.exceptions.enums.ErrorComponents;
-import com.fayardev.regms.userservice.exceptions.enums.Errors;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserValidate {
 
-    public static final String EMAIL_PATTERN = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+    private static final String EMAIL_PATTERN = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     public static final String PASSWORD_PATTERN = "^(?=.*\\d)(?=.*[a-z]).{8,16}$";
     public static final String USERNAME_PATTERN = "^(?=.{3,11}$)[a-z0-9._]+$";
 
-    public static boolean strUsernameLengthValidate(String username) throws UserException {
-        if (username == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.USERNAME);
+    public static boolean validateUsernameLength(String username) throws UserException {
+        validateNotNull(username, "username is null");
+        validateStringLength(username.trim().toLowerCase(), 1, User.USERNAME_MAX_LENGTH, "32 karakterden uzun");
+        return true;
+    }
+
+    public static boolean validatePasswordLength(String password) throws UserException {
+        validateNotNull(password, "password is null");
+        validateStringLength(password, User.PASSWORD_MIN_LENGTH, User.PASSWORD_MAX_LENGTH, "character length exceeded the limit");
+        return true;
+    }
+
+    public static boolean validatePassword(String password) throws UserException {
+        validateNotNull(password, "password is null");
+        validatePattern(password, PASSWORD_PATTERN, "password is unusable");
+        return true;
+    }
+
+    public static boolean validateEmailLength(String email) throws UserException {
+        validateNotNull(email, "email is null");
+        validateStringLength(email, 1, User.EMAIL_ADDRESS_MAX_LENGTH, "character length exceeded the limit");
+        return true;
+    }
+
+    public static boolean validateEmailPattern(String email) throws UserException {
+        validateNotNull(email, "null data");
+        validatePattern(email, EMAIL_PATTERN, "email is unusable");
+        return true;
+    }
+
+    public static boolean validateGender(String gender) throws UserException {
+        if (!gender.trim().equalsIgnoreCase("male")
+                && !gender.trim().equalsIgnoreCase("female")
+                && !gender.trim().equalsIgnoreCase("")) {
+            throw new UserException("invalid gender");
         }
-        if (!username.trim().isEmpty()) {
-            username = username.trim().toLowerCase();
-            if (!username.trim().isEmpty() && username.trim().length() <= User.USERNAME_MAX_LENGTH) {
-                return true;
-            } else throw new UserException("32 karakterden uzun", Errors.MAX_VALUE_LENGTH, ErrorComponents.USERNAME);
-        } else
-            throw new UserException("username cannot be blank", Errors.NOT_NULL_ERROR, ErrorComponents.USERNAME);
+        return true;
     }
 
-    public static boolean passwordLengthValidate(String password) throws UserException {
-        if (password == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.PASSWORD);
+    public static boolean validateUniqueEmail(String email, String existingEmail) throws UserException {
+        if (email.equals(existingEmail)) {
+            throw new UserException("this email address is already being used");
         }
-        if (!password.equals("")) {
-            if (password.trim().length() >= User.PASSWORD_MIN_LENGTH
-                    && password.length() <= User.PASSWORD_MAX_LENGTH)
-                return true;
-            else
-                throw new UserException("character length exceeded the limit", Errors.LENGTH_LIMIT, ErrorComponents.PASSWORD);
-        } else throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.PASSWORD);
+        return true;
     }
 
-    public static boolean passwordValidate(String pass) throws UserException {
-        if (pass == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.PASSWORD);
+    public static boolean validateUniqueUsername(String username, String existingUsername) throws UserException {
+        if (username.equals(existingUsername)) {
+            throw new UserException("this username is already being used");
         }
-        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
-        Matcher matcher = pattern.matcher(pass);
-        if (matcher.matches()) {
-            return true;
-        } else throw new UserException("password is unusable", Errors.REGEX, ErrorComponents.PASSWORD);
+        return true;
     }
 
-    public static boolean emailLengthValidate(String email) throws UserException {
-        if (email == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.EMAIL);
-        }
-        if (email.trim().length() <= User.EMAIL_ADDRESS_MAX_LENGTH && email.trim().length() > 0) {
-            return true;
-        } else
-            throw new UserException("character length exceeded the limit", Errors.MAX_VALUE_LENGTH, ErrorComponents.EMAIL);
+    public static boolean validateUsernamePattern(String username) throws UserException {
+        validatePattern(username, USERNAME_PATTERN, "username is unusable");
+        return true;
     }
 
-    public static boolean emailRegexValidate(String email) throws UserException {
-        if (email == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.EMAIL);
-        }
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(email);
-        if (matcher.matches()) {
-            return true;
-        } else throw new UserException("email is unusable", Errors.REGEX, ErrorComponents.EMAIL);
+    public static boolean validateUser(User user) throws UserException {
+        validateNotNull(user, "user is null");
+        return validateEmailLength(user.getEmailAddress()) &&
+                validateUsernameLength(user.getUid()) &&
+                validateUsernamePattern(user.getUid()) &&
+                validateEmailPattern(user.getEmailAddress()) &&
+                validateGender(user.getGender());
     }
 
-    public static boolean genderValidate(String gender) throws UserException {
-        if (gender == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.GENDER);
-        }
-        if (gender.trim().equalsIgnoreCase("male")
-                || gender.trim().equalsIgnoreCase("female")) {
-            return true;
-        } else {
-            throw new UserException("invalid gender", Errors.GENDER, ErrorComponents.GENDER);
+    public static void validateNotNull(Object value, String message) throws UserException {
+        if (value == null) {
+            throw new UserException(message);
         }
     }
 
-    public static boolean emailEquals(String str, String value, ErrorComponents errorComponent) throws UserException {
-        if (!str.equals(value)) {
-            return true;
-        } else throw new UserException("this email address is already being used", Errors.USED_EMAIL, errorComponent);
-    }
-
-    public static boolean usernameEquals(String str, String value, ErrorComponents errorComponent) throws UserException {
-        if (!str.equals(value)) {
-            return true;
-        } else throw new UserException("this username is already being used", Errors.USED_USERNAME, errorComponent);
-    }
-
-    public static boolean usernameRegexValidate(String username) throws UserException {
-        Pattern pattern = Pattern.compile(USERNAME_PATTERN);
-        Matcher matcher = pattern.matcher(username);
-        if (matcher.matches()) {
-            return true;
-        } else throw new UserException("username is unusable", Errors.REGEX, ErrorComponents.USERNAME);
-    }
-
-    public static boolean userValidate(User user) throws UserException {
-        if (user == null) {
-            throw new UserException("null data", Errors.NOT_NULL_ERROR, ErrorComponents.USER);
+    private static void validateStringLength(String value, int minLength, int maxLength, String message) throws UserException {
+        if (value == null || value.trim().isEmpty() || value.trim().length() < minLength || value.trim().length() > maxLength) {
+            throw new UserException(message);
         }
-        if (UserValidate.emailLengthValidate(user.getEmailAddress())) {
-            if (UserValidate.strUsernameLengthValidate(user.getUid())) {
-                if (UserValidate.usernameRegexValidate(user.getUid())) {
-                    if (UserValidate.emailRegexValidate(user.getEmailAddress())) {
-                        return UserValidate.genderValidate(user.getGender());
-                    } else return false;
-                } else return false;
-            } else return false;
-        }
-        return false;
     }
 
+    private static void validatePattern(String value, String pattern, String message) throws UserException {
+        if (!Pattern.compile(pattern).matcher(value).matches()) {
+            throw new UserException(message);
+        }
+    }
 }
