@@ -1,5 +1,6 @@
 package com.fayardev.regms.userservice.services;
 
+import com.fayardev.regms.userservice.dtos.ProfileDto;
 import com.fayardev.regms.userservice.dtos.UserDto;
 import com.fayardev.regms.userservice.entities.User;
 import com.fayardev.regms.userservice.exceptions.UserException;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class UserCommandHandler implements IUserCommandHandler<UserDto> {
 
     private final UserRepository repository;
+    private final ProfileService profileService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -35,7 +37,13 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
                 && UserValidate.validateUser(entity)
                 && isEmailUnique(entity.getEmailAddress())
                 && isUsernameUnique(entity.getUid())) {
-            return repository.save(entity).getUuid();
+            String uuid = repository.save(entity).getUuid();
+
+            ProfileDto profile = new ProfileDto();
+            profile.setUserId(uuid);
+            profileService.addProfile(profile);
+
+            return uuid;
         }
         return null;
     }
@@ -61,23 +69,22 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
     }
 
     @Override
-    public boolean update(UserDto entity) {
-        repository.save(modelMapper.map(entity, User.class));
+    public boolean update(User entity) {
+        repository.save(entity);
         return true;
     }
 
     @Override
     public boolean changeUsername(UserDto user) throws UserException {
         var username = user.getUid().trim().toLowerCase();
-        user.setUid(username);
 
         if (UserValidate.validateUsernameLength(username) && UserValidate.validateUsernamePattern(username)) {
-            UserDto entity = repository.getUserByUid(username)
-                    .map(user1 -> modelMapper.map(user1, UserDto.class))
-                    .orElse(null);
+            Optional<User> entity = repository.getUserByUuid(user.getUuid());
+            if (entity.isPresent()) {
+                User existingUser = entity.get();
+                existingUser.setUid(username);
 
-            if (entity != null) {
-                return this.update(user);
+                return this.repository.updateLdapUsername(existingUser);
             }
         }
         return false;
@@ -88,12 +95,12 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
         var emailAddress = user.getEmailAddress().trim();
 
         if (UserValidate.validateEmailLength(emailAddress) && UserValidate.validateEmailPattern(emailAddress)) {
-            UserDto entity = repository.getUserByEmailAddress(emailAddress)
-                    .map(user1 -> modelMapper.map(user1, UserDto.class))
-                    .orElse(null);
+            Optional<User> entity = repository.getUserByUuid(user.getUuid());
+            if (entity.isPresent()) {
+                User existingUser = entity.get();
+                existingUser.setEmailAddress(emailAddress);
 
-            if (entity != null) {
-                return this.update(user);
+                return this.repository.updateLdapEmailAddress(existingUser);
             }
         }
         return false;
@@ -101,23 +108,19 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
 
     @Override
     public boolean changePhoneNo(UserDto user) {
-        var phoneNo = user.getPhoneNo().trim();
-
-        UserDto entity = repository.getUserByPhoneNo(phoneNo)
-                .map(user1 -> modelMapper.map(user1, UserDto.class))
-                .orElse(null);
-
-        if (entity != null) {
-            return this.update(user);
-        }
         return false;
     }
 
     @Override
     public boolean freeze(UserDto user) {
-        User entity = modelMapper.map(user, User.class);
-        entity.setActive(!entity.isActive());
-        return this.update(user);
+        Optional<User> entity = repository.getUserByUuid(user.getUuid());
+        if (entity.isPresent()) {
+            User existingUser = entity.get();
+            existingUser.setActive(!existingUser.isActive());
+
+            return this.repository.updateLdapIsActive(existingUser);
+        }
+        return false;
     }
 
 }

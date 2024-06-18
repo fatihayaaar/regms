@@ -13,7 +13,7 @@ import javax.naming.Name;
 @NoArgsConstructor
 @ToString
 @Entry(objectClasses = {"inetOrgPerson", "top"}, base = "ou=users")
-public class User extends BaseEntity {
+public final class User extends BaseEntity {
 
     public static final int PASSWORD_MIN_LENGTH = 8;
     public static final int PASSWORD_MAX_LENGTH = 32;

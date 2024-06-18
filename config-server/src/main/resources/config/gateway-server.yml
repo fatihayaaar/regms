@@ -8,7 +8,6 @@ eureka:
     register-with-eureka: false
   instance:
     preferIpAddress: true
-
 spring:
   application:
     name: gateway-server
@@ -17,6 +16,15 @@ spring:
       discovery:
         locator:
           enabled: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
       routes:
         - id: user-service
           uri: lb://user-service
@@ -36,20 +44,9 @@ spring:
             - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
   security:
     oauth2:
-      client:
-        provider:
-          keycloak:
-            issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
-            user-name-attribute: preferred_username
-        registration:
-          keycloak:
-            client-id: ${KEYCLOAK_CLIENT_ID:regms-client}
-            #client-secret: ${KEYCLOAK_CLIENT_SECRET:xUGMo8uvkWL9l4JFmyiKaUDwwsIGni6m}
-            client-name: Keycloak
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:4200/"
-            scope:
-              - openid
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
     permit-all:
       urls: /user/v1/public/**, /public/**
 

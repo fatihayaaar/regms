@@ -15,6 +15,11 @@ eureka:
 spring:
   application:
     name: post-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
   data:
     cassandra:
       keyspace: regms_post

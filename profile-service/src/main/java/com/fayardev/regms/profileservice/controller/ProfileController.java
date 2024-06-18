@@ -14,6 +14,11 @@ public class ProfileController {
 
     private final ProfileService service;
 
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestBody ProfileDto profileDto) {
+        return ResponseEntity.ok(service.add(profileDto));
+    }
+
     @GetMapping("/my")
     public ResponseEntity<?> getMyProfile() {
         return ResponseEntity.ok(service.get(UUID.randomUUID()));
@@ -34,10 +39,5 @@ public class ProfileController {
     public ResponseEntity<?> changeIsPrivate(@RequestBody boolean isPrivate) {
         service.changeIsPrivate(UUID.randomUUID(), isPrivate);
         return ResponseEntity.ok(true);
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ProfileDto profileDto) {
-        return ResponseEntity.ok(service.add(profileDto));
     }
 }

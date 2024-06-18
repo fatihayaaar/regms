@@ -3,6 +3,7 @@ package com.fayardev.regms.userservice.controllers;
 import com.fayardev.regms.userservice.dtos.UserDto;
 import com.fayardev.regms.userservice.exceptions.UserException;
 import com.fayardev.regms.userservice.services.UserCommandHandler;
+import com.fayardev.regms.userservice.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,9 @@ public final class UserCommandController {
         return ResponseEntity.ok(commandHandler.saveEntity(userDto));
     }
 
-    @PatchMapping("/change-username")
+    @PostMapping("/change-username")
     public ResponseEntity<Boolean> changeUsername(@RequestBody UserDto userDto) throws UserException {
+        userDto.setUuid(JwtUtils.getUserUUID());
         return ResponseEntity.ok(commandHandler.changeUsername(userDto));
     }
 
