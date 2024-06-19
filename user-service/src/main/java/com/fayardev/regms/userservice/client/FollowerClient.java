@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "follower-service")
 public interface FollowerClient {
 
-    @PostMapping
+    @PostMapping("/v1/add")
     ResponseEntity<UserFollowerDto> createUser(@RequestParam UserFollowerDto userFollowerDto);
 }

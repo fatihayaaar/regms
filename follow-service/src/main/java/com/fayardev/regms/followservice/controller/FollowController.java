@@ -7,12 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class FollowController {
 
     private final UserService service;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<UserDto> createUser(@RequestParam UserDto userDto) {
         return ResponseEntity.ok(service.createUser(userDto));
     }

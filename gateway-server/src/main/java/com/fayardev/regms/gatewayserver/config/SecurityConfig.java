@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .pathMatchers("/user/v1/public/**").permitAll()
                         .pathMatchers("/profile/v1/public/**").permitAll()
                         .pathMatchers("/post/v1/public/**").permitAll()
+                        .pathMatchers("/follow/v1/public/**").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 

@@ -12,6 +12,6 @@ public class ProfileService {
     private final ProfileClient client;
 
     public void addProfile(ProfileDto profileDto) {
-        client.addProfile(profileDto);
+        client.add(profileDto);
     }
 }

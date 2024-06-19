@@ -26,6 +26,7 @@ class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers(new AntPathRequestMatcher("/v1/public/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/v1/add")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                     .anyRequest()
                     .authenticated()

@@ -8,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService service;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<ProfileDto> add(@RequestBody ProfileDto profileDto) {
         return ResponseEntity.ok(service.add(profileDto));
     }

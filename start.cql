@@ -5,16 +5,10 @@ CREATE KEYSPACE regms_profile
         };
 
 CREATE TABLE regms_profile.profile (
-    id UUID PRIMARY KEY,
-    userId UUID,
+    id TEXT PRIMARY KEY,
+    userId TEXT,
     biography TEXT,
-    settingsId UUID,
-    isPrivate BOOLEAN
-);
-
-CREATE TABLE regms_profile.settings (
-    id UUID PRIMARY KEY,
-    profileId UUID,
+    isPrivate BOOLEAN,
     notificationsEnabled BOOLEAN
 );
 
@@ -35,16 +29,4 @@ CREATE TABLE regms_post.post (
     commentCount INT,
     visible BOOLEAN,
     isDeleted BOOLEAN,
-);
-
-CREATE KEYSPACE regms_follow
-    WITH REPLICATION = {
-        'class': 'org.apache.cassandra.locator.SimpleStrategy',
-        'replication_factor': '3'
-        };
-
-CREATE TABLE regms_follow.follow (
-    id UUID PRIMARY KEY,
-    followerId UUID,
-    followingId UUID
 );

@@ -1,6 +1,5 @@
 package com.fayardev.regms.userservice.dtos;
 
-import com.fayardev.regms.userservice.entities.User;
 import com.fayardev.regms.userservice.validates.UserValidate;
 import lombok.*;
 
