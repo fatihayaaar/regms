@@ -4,17 +4,15 @@ import com.fayardev.regms.profileservice.dto.BaseDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-import java.util.UUID;
-
 public interface IService<T extends BaseDto> {
 
     T add(T entity);
 
-    void delete(UUID id);
+    void delete(String id);
 
     T update(T entity);
 
-    T get(UUID id);
+    T get(String id);
 
     Slice<T> getAll(Pageable pageable);
 }

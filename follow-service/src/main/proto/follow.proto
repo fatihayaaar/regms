@@ -1,20 +1,18 @@
 syntax = "proto3";
 option java_multiple_files= true;
 
-package com.fayardev.followservice.follow;
+package com.fayardev.followservice.user;
 
 service FollowService {
-  rpc GetFollow(FollowRequest) returns (FollowResponse);
+  rpc GetFollow(UserRequest) returns (UserResponse);
 }
 
-message FollowRequest {
-  bytes uuid = 1;
-  bytes followerUuid = 2;
-  bytes followingUuid = 3;
+message UserRequest {
+  string id = 1;
+  string followerId = 2;
 }
 
-message FollowResponse {
-  bytes uuid = 1;
-  bytes followerUuid = 2;
-  string followingUuid = 3;
+message UserResponse {
+  string id = 1;
+  string followerId = 2;
 }

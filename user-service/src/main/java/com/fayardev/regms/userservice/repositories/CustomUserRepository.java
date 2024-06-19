@@ -17,4 +17,10 @@ public interface CustomUserRepository {
     boolean updateLdapIsActive(User user);
 
     boolean updateLdapVerified(User user);
+
+    boolean updateLdapGender(User user);
+
+    boolean updateLdapBirthOfDate(User user);
+
+    boolean updateLdapJpegPhoto(User user);
 }

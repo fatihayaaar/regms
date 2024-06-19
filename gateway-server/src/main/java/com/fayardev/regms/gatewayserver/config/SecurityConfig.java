@@ -15,8 +15,6 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -34,6 +32,8 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers("/public/**").permitAll()
                         .pathMatchers("/user/v1/public/**").permitAll()
+                        .pathMatchers("/profile/v1/public/**").permitAll()
+                        .pathMatchers("/post/v1/public/**").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 

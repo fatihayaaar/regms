@@ -17,38 +17,74 @@ public final class UserCommandController {
     private final UserCommandHandler commandHandler;
 
     @PostMapping("/public/register")
-    public ResponseEntity<String> register(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(commandHandler.saveEntity(userDto));
+    public ResponseEntity<String> register(@RequestBody UserDto user) {
+        return ResponseEntity.ok(commandHandler.saveEntity(user));
     }
 
     @PostMapping("/change-username")
-    public ResponseEntity<Boolean> changeUsername(@RequestBody UserDto userDto) throws UserException {
-        userDto.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeUsername(userDto));
+    public ResponseEntity<Boolean> changeUsername(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeUsername(user));
     }
 
-    @PatchMapping("/change-firstname")
-    public ResponseEntity<Boolean> changeFirstname() {
-        return ResponseEntity.ok(true);
+    @PostMapping("/change-email")
+    public ResponseEntity<Boolean> changeEmailAddress(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeEmailAddress(user));
     }
 
-    @PatchMapping("/change-surname")
-    public ResponseEntity<Boolean> changeSurname() {
-        return ResponseEntity.ok(true);
+    @PostMapping("/change-name")
+    public ResponseEntity<Boolean> changeName(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeName(user));
     }
 
-    @PatchMapping("/change-email-address")
-    public ResponseEntity<Boolean> changeEmailAddress() {
-        return ResponseEntity.ok(true);
+    @PostMapping("/change-surname")
+    public ResponseEntity<Boolean> changeSurname(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeSurname(user));
     }
 
-    @PatchMapping("/change-photo")
-    public ResponseEntity<Boolean> changePhoto() {
-        return ResponseEntity.ok(true);
+    @PostMapping("/change-confirm")
+    public ResponseEntity<Boolean> changeConfirm(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeConfirm(user));
+    }
+
+    @PostMapping("/change-active")
+    public ResponseEntity<Boolean> changeIsActive(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeIsActive(user));
+    }
+
+    @PostMapping("/change-verified")
+    public ResponseEntity<Boolean> changeVerified(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeVerified(user));
+    }
+
+    @PostMapping("/change-gender")
+    public ResponseEntity<Boolean> changeGender(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeGender(user));
+    }
+
+    @PostMapping("/change-birth-of-date")
+    public ResponseEntity<Boolean> changeBirthOfDate(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeBirthOfDate(user));
+    }
+
+    @PostMapping("/change-jpeg-photo")
+    public ResponseEntity<Boolean> changeJpegPhoto(@RequestBody UserDto user) throws UserException {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.changeJpegPhoto(user));
     }
 
     @PatchMapping("/freeze")
-    public ResponseEntity<Boolean> freeze() {
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Boolean> freeze(@RequestBody UserDto user) {
+        user.setUuid(JwtUtils.getUserUUID());
+        return ResponseEntity.ok(commandHandler.freeze(user));
     }
+
 }

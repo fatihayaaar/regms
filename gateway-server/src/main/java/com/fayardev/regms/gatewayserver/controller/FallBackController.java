@@ -13,4 +13,19 @@ public class FallBackController {
     public ResponseEntity<String> userFallBack(){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("We are facing a problem");
     }
+
+    @GetMapping("/profileFallback")
+    public ResponseEntity<String> profileFallBack(){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("We are facing a problem");
+    }
+
+    @GetMapping("/postFallback")
+    public ResponseEntity<String> postFallBack(){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("We are facing a problem");
+    }
+
+    @GetMapping("/followFallback")
+    public ResponseEntity<String> followFallBack(){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("We are facing a problem");
+    }
 }

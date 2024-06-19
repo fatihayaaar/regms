@@ -18,5 +18,21 @@ public interface IUserCommandHandler<T extends BaseDto> extends IUserHandler {
 
     boolean changePhoneNo(T user) throws UserException;
 
+    boolean changeName(T user) throws UserException;
+
+    boolean changeSurname(T user) throws UserException;
+
+    boolean changeConfirm(T user) throws UserException;
+
+    boolean changeIsActive(T user) throws UserException;
+
+    boolean changeVerified(T user) throws UserException;
+
+    boolean changeGender(T user) throws UserException;
+
+    boolean changeBirthOfDate(T user) throws UserException;
+
+    boolean changeJpegPhoto(T user) throws UserException;
+
     boolean freeze(T user) throws UserException;
 }

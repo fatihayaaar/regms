@@ -2,47 +2,43 @@ package com.fayardev.regms.postservice.service;
 
 import com.fayardev.regms.postservice.dto.PostDto;
 import com.fayardev.regms.postservice.entity.Post;
-import com.fayardev.regms.postservice.entity.content.Content;
 import com.fayardev.regms.postservice.repository.PostRepository;
-import com.fayardev.regms.postservice.service.abstracts.IPostService;
+import com.fayardev.regms.postservice.service.abstracts.IPostCommandHandler;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostService implements IPostService<PostDto> {
+public class PostCommandHandler implements IPostCommandHandler<PostDto> {
 
     private final PostRepository repository;
     private final ModelMapper modelMapper;
 
     @Override
     public PostDto add(PostDto postDTO) {
-        Post post = repository.save(modelMapper.map(postDTO, Post.class));
-        postDTO.setId(post.getId());
+        postDTO.setId(UUID.randomUUID().toString());
+        postDTO.setDeleted(false);
+        repository.save(modelMapper.map(postDTO, Post.class));
         return postDTO;
     }
 
     @Override
-    public void delete(UUID id) {
+    public boolean delete(String id) {
         Post post = repository.findById(id).orElseThrow(IllegalArgumentException::new);
-        repository.delete(post);
+        post.setDeleted(true);
+        update(modelMapper.map(post, PostDto.class));
+        return true;
     }
 
     @Override
     public PostDto update(PostDto postDTO) {
         Optional<Post> post = repository.findById(postDTO.getId());
         Post updatedPost = post.map(it -> {
-            it.setContentId(postDTO.getContentId());
             it.setVisible(postDTO.isVisible());
             it.setUpdatedDate(new Date());
             return it;
@@ -52,7 +48,7 @@ public class PostService implements IPostService<PostDto> {
     }
 
     @Override
-    public PostDto visibility(UUID id, boolean visible) {
+    public PostDto visibility(String id, boolean visible) {
         Optional<Post> post = repository.findById(id);
         Post updatedPost = post.map(it -> {
             it.setVisible(visible);
@@ -61,20 +57,5 @@ public class PostService implements IPostService<PostDto> {
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedPost);
         return modelMapper.map(updatedPost, PostDto.class);
-    }
-
-    public PostDto get(UUID id) {
-        return modelMapper.map(repository.findById(id).orElseThrow(IllegalAccessError::new), PostDto.class);
-    }
-
-    public Slice<PostDto> getAll(Pageable pageable) {
-        Slice<Post> posts = repository.findAll(pageable);
-        List<PostDto> postDTOs = posts
-                .getContent()
-                .stream()
-                .map(post -> modelMapper.map(post, PostDto.class))
-                .collect(Collectors.toList());
-
-        return new SliceImpl<>(postDTOs, pageable, posts.hasNext());
     }
 }

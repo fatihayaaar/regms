@@ -2,7 +2,8 @@ package com.fayardev.regms.followservice.dto;
 
 import lombok.*;
 
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -10,9 +11,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public class FollowDto extends BaseDto {
+public class UserDto extends BaseDto {
 
-    private UUID id;
-    private UUID followerId;
-    private UUID followingId;
+    private String id;
+    private Set<UserDto> following = new HashSet<>();
 }

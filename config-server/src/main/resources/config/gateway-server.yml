@@ -36,6 +36,36 @@ spring:
               args:
                 name: userCircuitBreaker
                 fallbackUri: forward:/fallback/userFallback
+        - id: profile-service
+          uri: lb://profile-service
+          predicates:
+            - Path=/profile/**
+          filters:
+            - RewritePath=/profile/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/profileFallback
+        - id: post-service
+          uri: lb://post-service/graphql
+          predicates:
+            - Path=/post/**
+          filters:
+            - RewritePath=/post/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/postFallback
+        - id: follow-service
+          uri: lb://follow-service
+          predicates:
+            - Path=/follow/**
+          filters:
+            - RewritePath=/follow/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/followFallback
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -48,13 +78,15 @@ spring:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
     permit-all:
-      urls: /user/v1/public/**, /public/**
+      urls: /public/**, /user/v1/public/**, /profile/v1/public/**, /post/v1/public/**, /follow/v1/public/**
 
 springdoc:
   swagger-ui:
     urls:
       - name: user-service
         url: /v3/api-docs/user
+      - name: profile-service
+        url: /v3/api-docs/profile
 
 management:
   tracing:

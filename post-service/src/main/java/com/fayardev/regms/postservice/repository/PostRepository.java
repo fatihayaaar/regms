@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface PostRepository extends CassandraRepository<Post, UUID> {
+public interface PostRepository extends CassandraRepository<Post, String> {
 }

@@ -1,0 +1,36 @@
+type Post {
+    id: String!
+    userId: String!
+    uri: String
+    text: String!
+    createdDate: String
+    updatedDate: String
+    likeCount: Int
+    commentCount: Int
+    visible: Boolean
+    isDeleted: Boolean
+}
+
+input PostDto {
+    id: String
+    userId: String
+    uri: String
+    text: String!
+    createdDate: String
+    updatedDate: String
+    likeCount: Int
+    commentCount: Int
+    visible: Boolean
+    isDeleted: Boolean
+}
+
+type Query {
+    getPosts: [Post]
+    getPostById(id: String): Post
+}
+
+type Mutation {
+    createPost(post: PostDto): Post
+    delete(id: String): Boolean
+    update(post: PostDto): Post
+}

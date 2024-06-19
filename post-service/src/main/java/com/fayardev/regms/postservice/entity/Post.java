@@ -1,12 +1,10 @@
 package com.fayardev.regms.postservice.entity;
 
-import com.fayardev.regms.postservice.entity.content.Content;
 import lombok.*;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -18,12 +16,14 @@ import java.util.UUID;
 public class Post extends BaseEntity {
 
     @PrimaryKey
-    private UUID id;
-    private UUID userId;
-    private int contentId;
+    private String id;
+    private String userId;
+    private String uri;
+    private String text;
     private Date createdDate;
     private Date updatedDate;
     private int likeCount;
     private int commentCount;
     private boolean visible;
+    private boolean isDeleted;
 }

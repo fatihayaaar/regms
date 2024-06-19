@@ -21,14 +21,10 @@ class SecurityConfig {
 
     @Bean
     public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher("/v1/public/**")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
-                    .anyRequest()
-                    .authenticated()
+        http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth
+                .requestMatchers(new AntPathRequestMatcher("/v1/public/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

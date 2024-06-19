@@ -25,21 +25,16 @@ CREATE KEYSPACE regms_post
         };
 
 CREATE TABLE regms_post.post (
-    id UUID PRIMARY KEY,
-    userId UUID,
-    contentId UUID,
+    id TEXT PRIMARY KEY,
+    userId TEXT,
+    uri TEXT,
+    text TEXT,
     createdDate TIMESTAMP,
     updatedDate TIMESTAMP,
     likeCount INT,
     commentCount INT,
-    visible BOOLEAN
-);
-
-CREATE TABLE regms_post.content (
-    id UUID PRIMARY KEY,
-    contentType TEXT,
-    uri TEXT,
-    text TEXT
+    visible BOOLEAN,
+    isDeleted BOOLEAN,
 );
 
 CREATE KEYSPACE regms_follow

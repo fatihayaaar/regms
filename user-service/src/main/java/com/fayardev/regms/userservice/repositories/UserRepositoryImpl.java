@@ -59,6 +59,26 @@ public class UserRepositoryImpl implements CustomUserRepository {
         return updateAttribute(user.getDn(), "verified", String.valueOf(user.isVerified()));
     }
 
+    @Override
+    public boolean updateLdapGender(User user) {
+        return updateAttribute(user.getDn(), "gender", user.getGender());
+    }
+
+    @Override
+    public boolean updateLdapBirthOfDate(User user) {
+        return updateAttribute(user.getDn(), "birthOfDate", user.getBirthOfDate());
+    }
+
+    @Override
+    public boolean updateLdapJpegPhoto(User user) {
+        try {
+            ldapTemplate.modifyAttributes(user.getDn(), new ModificationItem[]{new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("jpegPhoto", user.getJpegPhoto()))});
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean updateAttribute(Name dn, String attributeName, String attributeValue) {
         try {
             ldapTemplate.modifyAttributes(dn, new ModificationItem[]{new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(attributeName, attributeValue))});

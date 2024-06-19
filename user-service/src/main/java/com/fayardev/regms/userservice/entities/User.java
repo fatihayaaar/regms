@@ -15,14 +15,6 @@ import javax.naming.Name;
 @Entry(objectClasses = {"inetOrgPerson", "top"}, base = "ou=users")
 public final class User extends BaseEntity {
 
-    public static final int PASSWORD_MIN_LENGTH = 8;
-    public static final int PASSWORD_MAX_LENGTH = 32;
-    public static final int USERNAME_MAX_LENGTH = 11;
-    public static final int USERNAME_MIN_LENGTH = 3;
-    public static final int EMAIL_ADDRESS_MAX_LENGTH = 32;
-    public static final int PHONE_NO_MAX_LENGTH = 32;
-    public static final int SEX_MAX_LENGTH = 8;
-
     @Id
     private Name dn;
 
