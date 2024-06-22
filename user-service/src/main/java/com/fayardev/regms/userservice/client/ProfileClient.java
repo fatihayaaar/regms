@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "profile-service")
 public interface ProfileClient {
 
-    @PostMapping("/v1/add")
+    @PostMapping("/v1/feign/add")
     ResponseEntity<ProfileDto> add(@RequestBody ProfileDto profileDto);
 }

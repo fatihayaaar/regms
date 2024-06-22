@@ -3,19 +3,18 @@ package com.fayardev.regms.profileservice.service;
 import com.fayardev.regms.profileservice.dto.ProfileDto;
 import com.fayardev.regms.profileservice.entity.Profile;
 import com.fayardev.regms.profileservice.repository.ProfileRepository;
-import com.fayardev.regms.profileservice.service.abstracts.IProfileService;
+import com.fayardev.regms.profileservice.service.abstracts.IProfileCommandHandler;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileService implements IProfileService<ProfileDto> {
+public class ProfileCommandHandler implements IProfileCommandHandler<ProfileDto> {
 
     private final ProfileRepository repository;
     private final ModelMapper modelMapper;
@@ -48,6 +47,26 @@ public class ProfileService implements IProfileService<ProfileDto> {
     }
 
     @Override
+    public void changeBackgroundImage(ProfileDto profileDto) {
+        Optional<Profile> profile = repository.getProfilesByUserId(profileDto.getUserId());
+        Profile updatedProfile = profile.map(it -> {
+            it.setBackgroundImage(profileDto.getBackgroundImage());
+            return it;
+        }).orElseThrow(IllegalArgumentException::new);
+        repository.save(updatedProfile);
+    }
+
+    @Override
+    public void deleteBackgroundImage(ProfileDto profileDto) {
+        Optional<Profile> profile = repository.getProfilesByUserId(profileDto.getUserId());
+        Profile updatedProfile = profile.map(it -> {
+            it.setBackgroundImage("".getBytes(StandardCharsets.UTF_8));
+            return it;
+        }).orElseThrow(IllegalArgumentException::new);
+        repository.save(updatedProfile);
+    }
+
+    @Override
     public void delete(String id) {
         Profile profile = repository.findById(id).orElseThrow(IllegalArgumentException::new);
         repository.delete(profile);
@@ -63,15 +82,5 @@ public class ProfileService implements IProfileService<ProfileDto> {
         }).orElseThrow(IllegalAccessError::new);
         repository.save(updatedProfile);
         return modelMapper.map(updatedProfile, ProfileDto.class);
-    }
-
-    @Override
-    public ProfileDto get(String id) {
-        return modelMapper.map(repository.findById(id).orElseThrow(IllegalAccessError::new), ProfileDto.class);
-    }
-
-    @Override
-    public Slice<ProfileDto> getAll(Pageable pageable) {
-        return null;
     }
 }

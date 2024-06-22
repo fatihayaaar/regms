@@ -105,3 +105,8 @@ management:
     health:
       probes:
         enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.beans.factory: DEBUG

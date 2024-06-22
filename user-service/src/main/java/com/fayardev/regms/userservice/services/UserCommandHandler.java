@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -215,6 +216,18 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
         if (entity.isPresent()) {
             User existingUser = entity.get();
             existingUser.setJpegPhoto(jpegPhoto);
+
+            return this.repository.updateLdapJpegPhoto(existingUser);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteJpegPhoto(UserDto user) throws UserException {
+        Optional<User> entity = repository.getUserByUuid(user.getUuid());
+        if (entity.isPresent()) {
+            User existingUser = entity.get();
+            existingUser.setJpegPhoto("".getBytes(StandardCharsets.UTF_8));
 
             return this.repository.updateLdapJpegPhoto(existingUser);
         }

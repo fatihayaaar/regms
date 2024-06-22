@@ -5,7 +5,14 @@ server:
       client:
         url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:8077}
 
+grpc:
+  server:
+    port: 0
+
 eureka:
+  instance:
+    metadata-map:
+      grpc.port: ${grpc.server.port:0}
   client:
     instance:
       hostname: ${EUREKA_SERVER_HOSTNAME:localhost}

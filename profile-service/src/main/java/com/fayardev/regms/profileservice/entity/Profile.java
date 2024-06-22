@@ -19,4 +19,5 @@ public class Profile extends BaseEntity {
     private String biography;
     private boolean isPrivate;
     private boolean notificationsEnabled;
+    private byte[] backgroundImage;
 }

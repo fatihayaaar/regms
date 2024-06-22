@@ -9,7 +9,8 @@ CREATE TABLE regms_profile.profile (
     userId TEXT,
     biography TEXT,
     isPrivate BOOLEAN,
-    notificationsEnabled BOOLEAN
+    notificationsEnabled BOOLEAN,
+    backgroundImage TEXT
 );
 
 CREATE KEYSPACE regms_post

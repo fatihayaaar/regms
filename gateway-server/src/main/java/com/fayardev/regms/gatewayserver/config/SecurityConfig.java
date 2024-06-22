@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .pathMatchers("/public/**").permitAll()
                         .pathMatchers("/user/v1/public/**").permitAll()
                         .pathMatchers("/profile/v1/public/**").permitAll()
+                        .pathMatchers("/profile/v1/feign/add").denyAll()
                         .pathMatchers("/post/v1/public/**").permitAll()
                         .pathMatchers("/follow/v1/public/**").permitAll()
                         .anyExchange().authenticated())

@@ -81,6 +81,11 @@ public final class UserCommandController {
         return ResponseEntity.ok(commandHandler.changeJpegPhoto(user));
     }
 
+    @PostMapping("/delete-jpeg-photo")
+    public ResponseEntity<Boolean> deleteJpegPhoto() throws UserException {
+        return ResponseEntity.ok(commandHandler.deleteJpegPhoto(UserDto.builder().uuid(JwtUtils.getUserUUID()).build()));
+    }
+
     @PatchMapping("/freeze")
     public ResponseEntity<Boolean> freeze(@RequestBody UserDto user) {
         user.setUuid(JwtUtils.getUserUUID());
