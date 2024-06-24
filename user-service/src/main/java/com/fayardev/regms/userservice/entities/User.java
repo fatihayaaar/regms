@@ -56,6 +56,6 @@ public final class User extends BaseEntity {
     @Attribute(name = "birthOfDate")
     private String birthOfDate;
 
-    @Attribute(name = "jpegPhoto")
-    private byte[] jpegPhoto;
+    @Attribute(name = "avatar")
+    private String avatar;
 }

@@ -21,5 +21,8 @@ olcAttributeTypes: {7}( 2.16.840.1.11730.3.1.41 NAME 'createDate' DESC 'createDa
 add: olcAttributeTypes
 olcAttributeTypes: {8}( 2.16.840.1.11730.3.1.42 NAME 'uuid' DESC 'uuid for user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
 -
+add: olcAttributeTypes
+olcAttributeTypes: {9}( 2.16.840.1.11730.3.1.43 NAME 'avatar' DESC 'photo for user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+-
 replace: olcObjectClasses
-olcObjectClasses: ( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC2798: Internet Organizational Person' SUP organizationalPerson STRUCTURAL MAY ( audio $ businessCategory $ carLicense $ departmentNumber $ displayName $ employeeNumber $ employeeType $ givenName $ homePhone $ homePostalAddress $ initials $ jpegPhoto $ labeledURI $ mail $ manager $ mobile $ o $ pager $ photo $ roomNumber $ secretary $ uid $ userCertificate $ x500uniqueIdentifier $ preferredLanguage $ userSMIMECertificate $ userPKCS12 $ gender $ birthOfDate $ confirm $ verified $ isActive $ createDate $ uuid) )
+olcObjectClasses: ( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC2798: Internet Organizational Person' SUP organizationalPerson STRUCTURAL MAY ( audio $ businessCategory $ carLicense $ departmentNumber $ displayName $ employeeNumber $ employeeType $ givenName $ homePhone $ homePostalAddress $ initials $ jpegPhoto $ labeledURI $ mail $ manager $ mobile $ o $ pager $ photo $ roomNumber $ secretary $ uid $ userCertificate $ x500uniqueIdentifier $ preferredLanguage $ userSMIMECertificate $ userPKCS12 $ gender $ birthOfDate $ confirm $ verified $ isActive $ createDate $ uuid $ avatar) )

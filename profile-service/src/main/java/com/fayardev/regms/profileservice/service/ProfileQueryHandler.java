@@ -27,7 +27,20 @@ public class ProfileQueryHandler implements IProfileQueryHandler<ProfileDto> {
         profile.setUsername(user.getUid());
         profile.setName(user.getName());
         profile.setSurname(user.getSurname());
-        profile.setJpegPhoto(String.valueOf(user.getJpegPhoto()));
+        profile.setAvatar(user.getAvatar());
+
+        return profile;
+    }
+
+    @Override
+    public ProfileDto getByUsername(String username) {
+        UserResponse user = userClient.getUserByUsername(username);
+
+        ProfileDto profile = modelMapper.map(repository.getProfilesByUserId(user.getUuid()).orElseThrow(IllegalAccessError::new), ProfileDto.class);
+        profile.setUsername(user.getUid());
+        profile.setName(user.getName());
+        profile.setSurname(user.getSurname());
+        profile.setAvatar(user.getAvatar());
 
         return profile;
     }

@@ -1,11 +1,10 @@
-package com.fayardev.regms.profileservice.client;
+package com.fayardev.regms.postservice.client;
 
 import com.fayardev.userservice.user.UserRequest;
 import com.fayardev.userservice.user.UserResponse;
 import com.fayardev.userservice.user.UserServiceGrpc;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
-
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.RequiredArgsConstructor;

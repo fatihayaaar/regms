@@ -48,7 +48,7 @@ public class UserDto extends BaseDto {
     @NotBlank
     private String birthOfDate;
 
-    private byte[] jpegPhoto;
+    private String avatar;
 
     private boolean confirm;
 

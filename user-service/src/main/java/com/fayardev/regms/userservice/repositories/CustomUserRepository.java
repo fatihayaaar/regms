@@ -22,5 +22,5 @@ public interface CustomUserRepository {
 
     boolean updateLdapBirthOfDate(User user);
 
-    boolean updateLdapJpegPhoto(User user);
+    boolean updateLdapAvatar(User user);
 }

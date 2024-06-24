@@ -33,9 +33,9 @@ public interface IUserCommandHandler<T extends BaseDto> extends IUserHandler {
 
     boolean changeBirthOfDate(T user) throws UserException;
 
-    boolean changeJpegPhoto(T user) throws UserException;
+    boolean changeAvatar(T user) throws UserException;
 
-    boolean deleteJpegPhoto(UserDto user) throws UserException;
+    boolean deleteAvatar(UserDto user) throws UserException;
 
     boolean freeze(T user) throws UserException;
 }

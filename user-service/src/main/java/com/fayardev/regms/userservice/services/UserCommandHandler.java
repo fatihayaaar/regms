@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -209,27 +208,27 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
     }
 
     @Override
-    public boolean changeJpegPhoto(UserDto user) throws UserException {
-        var jpegPhoto = user.getJpegPhoto();
+    public boolean changeAvatar(UserDto user) throws UserException {
+        var avatar = user.getAvatar();
 
         Optional<User> entity = repository.getUserByUuid(user.getUuid());
         if (entity.isPresent()) {
             User existingUser = entity.get();
-            existingUser.setJpegPhoto(jpegPhoto);
+            existingUser.setAvatar(avatar);
 
-            return this.repository.updateLdapJpegPhoto(existingUser);
+            return this.repository.updateLdapAvatar(existingUser);
         }
         return false;
     }
 
     @Override
-    public boolean deleteJpegPhoto(UserDto user) throws UserException {
+    public boolean deleteAvatar(UserDto user) throws UserException {
         Optional<User> entity = repository.getUserByUuid(user.getUuid());
         if (entity.isPresent()) {
             User existingUser = entity.get();
-            existingUser.setJpegPhoto("".getBytes(StandardCharsets.UTF_8));
+            existingUser.setAvatar("");
 
-            return this.repository.updateLdapJpegPhoto(existingUser);
+            return this.repository.updateLdapAvatar(existingUser);
         }
         return false;
     }

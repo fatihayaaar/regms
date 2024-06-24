@@ -23,6 +23,7 @@ public class PostCommandHandler implements IPostCommandHandler<PostDto> {
     public PostDto add(PostDto postDTO) {
         postDTO.setId(UUID.randomUUID().toString());
         postDTO.setDeleted(false);
+        postDTO.setCreatedDate(new Date());
         repository.save(modelMapper.map(postDTO, Post.class));
         return postDTO;
     }

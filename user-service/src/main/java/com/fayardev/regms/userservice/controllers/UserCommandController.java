@@ -75,15 +75,15 @@ public final class UserCommandController {
         return ResponseEntity.ok(commandHandler.changeBirthOfDate(user));
     }
 
-    @PostMapping("/change-jpeg-photo")
-    public ResponseEntity<Boolean> changeJpegPhoto(@RequestBody UserDto user) throws UserException {
+    @PostMapping("/change-avatar")
+    public ResponseEntity<Boolean> changeAvatar(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeJpegPhoto(user));
+        return ResponseEntity.ok(commandHandler.changeAvatar(user));
     }
 
-    @PostMapping("/delete-jpeg-photo")
-    public ResponseEntity<Boolean> deleteJpegPhoto() throws UserException {
-        return ResponseEntity.ok(commandHandler.deleteJpegPhoto(UserDto.builder().uuid(JwtUtils.getUserUUID()).build()));
+    @PostMapping("/delete-avatar")
+    public ResponseEntity<Boolean> deleteAvatar() throws UserException {
+        return ResponseEntity.ok(commandHandler.deleteAvatar(UserDto.builder().uuid(JwtUtils.getUserUUID()).build()));
     }
 
     @PatchMapping("/freeze")

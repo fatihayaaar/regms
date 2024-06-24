@@ -22,4 +22,6 @@ public class PostDto extends BaseDto {
     private int commentCount;
     private boolean visible;
     private boolean isDeleted;
+    private String username;
+    private String avatar;
 }

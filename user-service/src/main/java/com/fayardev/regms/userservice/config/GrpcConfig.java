@@ -37,7 +37,6 @@ public class GrpcConfig {
 
                 applicationInfoManager.getInfo().getMetadata().put("grpc.port", String.valueOf(actualPort));
                 applicationInfoManager.registerAppMetadata(applicationInfoManager.getInfo().getMetadata());
-                System.out.println(applicationInfoManager.getInfo().getMetadata());
             }
         };
     }

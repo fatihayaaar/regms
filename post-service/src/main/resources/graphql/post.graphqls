@@ -9,6 +9,8 @@ type Post {
     commentCount: Int
     visible: Boolean
     isDeleted: Boolean
+    username: String
+    avatar: String
 }
 
 input PostDto {
@@ -22,11 +24,15 @@ input PostDto {
     commentCount: Int
     visible: Boolean
     isDeleted: Boolean
+    username: String
+    avatar: String
 }
 
 type Query {
     getPosts: [Post]
     getPostById(id: String): Post
+    getMyPosts: [Post]
+    getPostsByUsername(username: String): [Post]
 }
 
 type Mutation {

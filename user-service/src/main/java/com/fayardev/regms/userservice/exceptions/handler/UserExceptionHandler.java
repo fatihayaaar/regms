@@ -19,7 +19,6 @@ public class UserExceptionHandler {
     @ExceptionHandler(value = { UserException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleUserInternalErrorException(UserException ex) {
-        System.out.println(ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

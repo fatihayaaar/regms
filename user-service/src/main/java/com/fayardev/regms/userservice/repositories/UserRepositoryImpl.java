@@ -70,9 +70,9 @@ public class UserRepositoryImpl implements CustomUserRepository {
     }
 
     @Override
-    public boolean updateLdapJpegPhoto(User user) {
+    public boolean updateLdapAvatar(User user) {
         try {
-            ldapTemplate.modifyAttributes(user.getDn(), new ModificationItem[]{new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("jpegPhoto", user.getJpegPhoto()))});
+            ldapTemplate.modifyAttributes(user.getDn(), new ModificationItem[]{new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("avatar", user.getAvatar()))});
             return true;
         } catch (Exception e) {
             return false;

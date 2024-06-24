@@ -25,6 +25,6 @@ public class ProfileQueryController {
 
     @GetMapping("/{username}")
     public ResponseEntity<ProfileDto> getProfile(@PathVariable String username) {
-        return ResponseEntity.ok(handler.get(username));
+        return ResponseEntity.ok(handler.getByUsername(username));
     }
 }

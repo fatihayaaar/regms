@@ -15,9 +15,9 @@ public class ProfileDto extends BaseDto {
     private String biography;
     private boolean isPrivate;
     private boolean notificationsEnabled;
-    private byte[] backgroundImage;
+    private String backgroundImage;
     private String username;
-    private String jpegPhoto;
+    private String avatar;
     private String name;
     private String surname;
 }

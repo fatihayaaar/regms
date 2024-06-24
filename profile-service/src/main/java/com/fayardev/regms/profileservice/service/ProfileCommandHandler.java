@@ -60,7 +60,7 @@ public class ProfileCommandHandler implements IProfileCommandHandler<ProfileDto>
     public void deleteBackgroundImage(ProfileDto profileDto) {
         Optional<Profile> profile = repository.getProfilesByUserId(profileDto.getUserId());
         Profile updatedProfile = profile.map(it -> {
-            it.setBackgroundImage("".getBytes(StandardCharsets.UTF_8));
+            it.setBackgroundImage("");
             return it;
         }).orElseThrow(IllegalArgumentException::new);
         repository.save(updatedProfile);

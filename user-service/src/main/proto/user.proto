@@ -5,6 +5,7 @@ package com.fayardev.userservice.user;
 
 service UserService {
   rpc GetUserByUuid(UserRequest) returns (UserResponse);
+  rpc GetUserByUid(UserRequest) returns (UserResponse);
 }
 
 message UserRequest {
@@ -18,7 +19,7 @@ message UserRequest {
   bool verified = 8;
   string gender = 9;
   string birth_of_date = 10;
-  bytes jpeg_photo = 11;
+  string avatar = 11;
 }
 
 message UserResponse {
@@ -32,5 +33,5 @@ message UserResponse {
   bool verified = 8;
   string gender = 9;
   string birth_of_date = 10;
-  bytes jpeg_photo = 11;
+  string avatar = 11;
 }

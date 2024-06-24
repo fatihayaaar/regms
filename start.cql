@@ -20,14 +20,23 @@ CREATE KEYSPACE regms_post
         };
 
 CREATE TABLE regms_post.post (
-    id TEXT PRIMARY KEY,
-    userId TEXT,
-    uri TEXT,
-    text TEXT,
-    createdDate TIMESTAMP,
-    updatedDate TIMESTAMP,
-    likeCount INT,
-    commentCount INT,
-    visible BOOLEAN,
-    isDeleted BOOLEAN,
+                                 id TEXT PRIMARY KEY ,
+                                 userId TEXT,
+                                 uri TEXT,
+                                 text TEXT,
+                                 createdDate TIMESTAMP,
+                                 updatedDate TIMESTAMP,
+                                 likeCount INT,
+                                 commentCount INT,
+                                 visible BOOLEAN,
+                                 isDeleted BOOLEAN,
 );
+
+CREATE MATERIALIZED VIEW regms_post.post_by_created_date AS
+SELECT *
+FROM regms_post.post
+WHERE isDeleted IS NOT NULL AND createdDate IS NOT NULL
+PRIMARY KEY (isDeleted, createdDate, id)
+WITH CLUSTERING ORDER BY (createdDate DESC);
+
+CREATE INDEX ON regms_post.post (isDeleted);
