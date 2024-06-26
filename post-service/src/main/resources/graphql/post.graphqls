@@ -17,7 +17,7 @@ input PostDto {
     id: String
     userId: String
     uri: String
-    text: String!
+    text: String
     createdDate: String
     updatedDate: String
     likeCount: Int
@@ -37,6 +37,6 @@ type Query {
 
 type Mutation {
     createPost(post: PostDto): Post
-    delete(id: String): Boolean
+    delete(post: PostDto): Boolean
     update(post: PostDto): Post
 }

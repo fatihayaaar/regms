@@ -1,5 +1,6 @@
 package com.fayardev.regms.profileservice.service;
 
+import com.fayardev.regms.profileservice.client.FollowClient;
 import com.fayardev.regms.profileservice.client.UserGrpcClient;
 import com.fayardev.regms.profileservice.dto.ProfileDto;
 import com.fayardev.regms.profileservice.repository.ProfileRepository;
@@ -17,6 +18,7 @@ public class ProfileQueryHandler implements IProfileQueryHandler<ProfileDto> {
 
     private final ProfileRepository repository;
     private final UserGrpcClient userClient;
+    private final FollowClient followClient;
     private final ModelMapper modelMapper;
 
     @Override
@@ -28,6 +30,7 @@ public class ProfileQueryHandler implements IProfileQueryHandler<ProfileDto> {
         profile.setName(user.getName());
         profile.setSurname(user.getSurname());
         profile.setAvatar(user.getAvatar());
+        profile.setFollowing(followClient.isFollowing(user.getUid()));
 
         return profile;
     }
@@ -41,6 +44,9 @@ public class ProfileQueryHandler implements IProfileQueryHandler<ProfileDto> {
         profile.setName(user.getName());
         profile.setSurname(user.getSurname());
         profile.setAvatar(user.getAvatar());
+        profile.setFollowing(followClient.isFollowing(user.getUid()));
+        profile.setFolloweeCount(followClient.getFolloweeCount(user.getUid()));
+        profile.setFollowerCount(followClient.getFollowerCount(user.getUid()));
 
         return profile;
     }

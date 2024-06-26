@@ -2,6 +2,8 @@ package com.fayardev.regms.userservice.repositories;
 
 import com.fayardev.regms.userservice.entities.User;
 
+import java.util.List;
+
 public interface CustomUserRepository {
 
     boolean updateLdapUsername(User user);
@@ -23,4 +25,6 @@ public interface CustomUserRepository {
     boolean updateLdapBirthOfDate(User user);
 
     boolean updateLdapAvatar(User user);
+
+    List<User> searchUsers(String query);
 }

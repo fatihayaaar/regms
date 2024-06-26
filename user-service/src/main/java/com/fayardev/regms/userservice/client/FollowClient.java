@@ -4,11 +4,11 @@ import com.fayardev.regms.userservice.dtos.UserFollowerDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "follower-service")
-public interface FollowerClient {
+@FeignClient(name = "follow-service")
+public interface FollowClient {
 
     @PostMapping("/v1/add")
-    ResponseEntity<UserFollowerDto> createUser(@RequestParam UserFollowerDto userFollowerDto);
+    ResponseEntity<UserFollowerDto> createUser(@RequestBody UserFollowerDto userFollowerDto);
 }

@@ -6,6 +6,8 @@ import com.fayardev.regms.userservice.repositories.UserRepository;
 import com.fayardev.regms.userservice.services.abstracts.IUserQueryHandler;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,14 @@ public class UserQueryHandler implements IUserQueryHandler<UserDto> {
     @Override
     public List<UserDto> getEntities() {
         List<User> users = repository.findAll();
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDto> searchUsers(String value) {
+        List<User> users = repository.searchUsers(value);
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());

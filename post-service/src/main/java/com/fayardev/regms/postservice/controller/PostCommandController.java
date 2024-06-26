@@ -24,8 +24,9 @@ public class PostCommandController {
     }
 
     @MutationMapping
-    public boolean delete(@Argument String id) {
-        return handler.delete(id);
+    public boolean delete(@Argument PostDto post) {
+        post.setUserId(JwtUtils.getUserUUID());
+        return handler.delete(post);
     }
 
     @MutationMapping

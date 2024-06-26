@@ -23,7 +23,7 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
 
     private final UserRepository repository;
     private final ProfileService profileService;
-    private final FollowerService followerService;
+    private final FollowService followService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -49,7 +49,7 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
 
             UserFollowerDto userFollowerDto = new UserFollowerDto();
             userFollowerDto.setId(uuid);
-            followerService.createUser(userFollowerDto);
+            followService.createUser(userFollowerDto);
 
             return uuid;
         }
@@ -226,7 +226,7 @@ public class UserCommandHandler implements IUserCommandHandler<UserDto> {
         Optional<User> entity = repository.getUserByUuid(user.getUuid());
         if (entity.isPresent()) {
             User existingUser = entity.get();
-            existingUser.setAvatar("");
+            existingUser.setAvatar(null);
 
             return this.repository.updateLdapAvatar(existingUser);
         }

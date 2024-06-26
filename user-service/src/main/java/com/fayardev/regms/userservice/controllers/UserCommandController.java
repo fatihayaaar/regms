@@ -14,82 +14,82 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public final class UserCommandController {
 
-    private final UserCommandHandler commandHandler;
+    private final UserCommandHandler handler;
 
     @PostMapping("/public/register")
     public ResponseEntity<String> register(@RequestBody UserDto user) {
-        return ResponseEntity.ok(commandHandler.saveEntity(user));
+        return ResponseEntity.ok(handler.saveEntity(user));
     }
 
     @PostMapping("/change-username")
     public ResponseEntity<Boolean> changeUsername(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeUsername(user));
+        return ResponseEntity.ok(handler.changeUsername(user));
     }
 
     @PostMapping("/change-email")
     public ResponseEntity<Boolean> changeEmailAddress(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeEmailAddress(user));
+        return ResponseEntity.ok(handler.changeEmailAddress(user));
     }
 
     @PostMapping("/change-name")
     public ResponseEntity<Boolean> changeName(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeName(user));
+        return ResponseEntity.ok(handler.changeName(user));
     }
 
     @PostMapping("/change-surname")
     public ResponseEntity<Boolean> changeSurname(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeSurname(user));
+        return ResponseEntity.ok(handler.changeSurname(user));
     }
 
     @PostMapping("/change-confirm")
     public ResponseEntity<Boolean> changeConfirm(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeConfirm(user));
+        return ResponseEntity.ok(handler.changeConfirm(user));
     }
 
     @PostMapping("/change-active")
     public ResponseEntity<Boolean> changeIsActive(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeIsActive(user));
+        return ResponseEntity.ok(handler.changeIsActive(user));
     }
 
     @PostMapping("/change-verified")
     public ResponseEntity<Boolean> changeVerified(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeVerified(user));
+        return ResponseEntity.ok(handler.changeVerified(user));
     }
 
     @PostMapping("/change-gender")
     public ResponseEntity<Boolean> changeGender(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeGender(user));
+        return ResponseEntity.ok(handler.changeGender(user));
     }
 
     @PostMapping("/change-birth-of-date")
     public ResponseEntity<Boolean> changeBirthOfDate(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeBirthOfDate(user));
+        return ResponseEntity.ok(handler.changeBirthOfDate(user));
     }
 
     @PostMapping("/change-avatar")
     public ResponseEntity<Boolean> changeAvatar(@RequestBody UserDto user) throws UserException {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.changeAvatar(user));
+        return ResponseEntity.ok(handler.changeAvatar(user));
     }
 
     @PostMapping("/delete-avatar")
     public ResponseEntity<Boolean> deleteAvatar() throws UserException {
-        return ResponseEntity.ok(commandHandler.deleteAvatar(UserDto.builder().uuid(JwtUtils.getUserUUID()).build()));
+        return ResponseEntity.ok(handler.deleteAvatar(UserDto.builder().uuid(JwtUtils.getUserUUID()).build()));
     }
 
     @PatchMapping("/freeze")
     public ResponseEntity<Boolean> freeze(@RequestBody UserDto user) {
         user.setUuid(JwtUtils.getUserUUID());
-        return ResponseEntity.ok(commandHandler.freeze(user));
+        return ResponseEntity.ok(handler.freeze(user));
     }
 
 }

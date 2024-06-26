@@ -13,4 +13,6 @@ public interface IUserQueryHandler<T extends BaseDto> extends IUserHandler {
     T getEntityByPhoneNo(String phoneNo);
 
     List<T> getEntities();
+
+    List<T> searchUsers(String value);
 }

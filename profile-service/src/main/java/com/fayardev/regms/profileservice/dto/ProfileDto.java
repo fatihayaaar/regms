@@ -20,4 +20,7 @@ public class ProfileDto extends BaseDto {
     private String avatar;
     private String name;
     private String surname;
+    private boolean isFollowing;
+    private int followerCount;
+    private int followeeCount;
 }

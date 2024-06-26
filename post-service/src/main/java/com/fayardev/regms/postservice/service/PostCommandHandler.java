@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,11 +30,14 @@ public class PostCommandHandler implements IPostCommandHandler<PostDto> {
     }
 
     @Override
-    public boolean delete(String id) {
-        Post post = repository.findById(id).orElseThrow(IllegalArgumentException::new);
-        post.setDeleted(true);
-        update(modelMapper.map(post, PostDto.class));
-        return true;
+    public boolean delete(PostDto postDto) {
+        Post post = repository.findById(postDto.getId()).orElseThrow(IllegalArgumentException::new);
+        if (Objects.equals(post.getUserId(), postDto.getUserId())) {
+            post.setDeleted(true);
+            update(modelMapper.map(post, PostDto.class));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -41,6 +45,7 @@ public class PostCommandHandler implements IPostCommandHandler<PostDto> {
         Optional<Post> post = repository.findById(postDTO.getId());
         Post updatedPost = post.map(it -> {
             it.setVisible(postDTO.isVisible());
+            it.setDeleted(postDTO.isDeleted());
             it.setUpdatedDate(new Date());
             return it;
         }).orElseThrow(IllegalAccessError::new);

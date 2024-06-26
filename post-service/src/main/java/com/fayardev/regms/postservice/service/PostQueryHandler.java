@@ -12,8 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +40,7 @@ public class PostQueryHandler implements IPostQueryHandler<PostDto> {
         Slice<Post> posts = repository.getPostsByUserId(id, PageRequest.of(0, 10));
         UserResponse user = userClient.getUserByUuid(id);
 
-        return posts.getContent().stream().map(post -> {
-            PostDto postDto = modelMapper.map(post, PostDto.class);
-            postDto.setUsername(user.getUid());
-            postDto.setAvatar(user.getAvatar());
-            return postDto;
-        }).collect(Collectors.toList());
+        return getPostDtos(user, posts);
     }
 
     @Override
@@ -53,24 +48,32 @@ public class PostQueryHandler implements IPostQueryHandler<PostDto> {
         UserResponse user = userClient.getUserByUsername(username);
 
         Slice<Post> posts = repository.getPostsByUserId(user.getUuid(), PageRequest.of(0, 10));
-        return posts.getContent().stream().map(post -> {
-            PostDto postDto = modelMapper.map(post, PostDto.class);
-            postDto.setUsername(user.getUid());
-            postDto.setAvatar(user.getAvatar());
-            return postDto;
-        }).collect(Collectors.toList());
+        return getPostDtos(user, posts);
     }
 
     @Override
     public List<PostDto> getAll() {
-        Slice<Post> posts = repository.findAll(PageRequest.of(0, 10));
+        Slice<Post> posts = repository.getPosts(PageRequest.of(0, 20));
 
-        return posts.getContent().stream().map(post -> {
-            PostDto postDto = modelMapper.map(post, PostDto.class);
-            UserResponse user = userClient.getUserByUuid(post.getUserId());
-            postDto.setUsername(user.getUid());
-            postDto.setAvatar(user.getAvatar());
-            return postDto;
-        }).collect(Collectors.toList());
+        return posts.getContent().stream()
+                .sorted(Comparator.comparing(Post::getCreatedDate).reversed())
+                .map(post -> {
+                    PostDto postDto = modelMapper.map(post, PostDto.class);
+                    UserResponse user = userClient.getUserByUuid(post.getUserId());
+                    postDto.setUsername(user.getUid());
+                    postDto.setAvatar(user.getAvatar());
+                    return postDto;
+                }).toList();
+    }
+
+    private List<PostDto> getPostDtos(UserResponse user, Slice<Post> posts) {
+        return posts.getContent().stream()
+                .sorted(Comparator.comparing(Post::getCreatedDate).reversed())
+                .map(post -> {
+                    PostDto postDto = modelMapper.map(post, PostDto.class);
+                    postDto.setUsername(user.getUid());
+                    postDto.setAvatar(user.getAvatar());
+                    return postDto;
+                }).toList();
     }
 }

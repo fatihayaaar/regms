@@ -3,6 +3,8 @@ package com.fayardev.regms.userservice.repositories;
 import com.fayardev.regms.userservice.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapNameBuilder;
 
 import javax.naming.Name;
@@ -10,6 +12,8 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.ldap.LdapName;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements CustomUserRepository {
@@ -86,5 +90,60 @@ public class UserRepositoryImpl implements CustomUserRepository {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public List<User> searchUsers(String query) {
+        String[] parts = query.trim().split("\\s+");
+        String surname = parts[parts.length - 1];
+
+        StringBuilder nameBuilder = new StringBuilder();
+        for (int i = 0; i < parts.length - 1; i++) {
+            if (!nameBuilder.isEmpty()) {
+                nameBuilder.append(" ");
+            }
+            nameBuilder.append(parts[i]);
+        }
+        String name = nameBuilder.toString();
+
+        String wildcardQueryName = "*" + name + "*";
+        String wildcardQuerySurname = "*" + surname + "*";
+        String wildcardQueryBoth = "*" + query + "*";
+
+        LdapQuery ldapQuery = LdapQueryBuilder.query()
+                .where("uid").like(wildcardQueryBoth)
+                .or(LdapQueryBuilder.query().where("cn").like(wildcardQueryName).and("sn").like(wildcardQuerySurname))
+                .or(LdapQueryBuilder.query().where("cn").like(wildcardQueryBoth))
+                .or(LdapQueryBuilder.query().where("sn").like(wildcardQueryBoth));
+
+        List<User> users = ldapTemplate.find(ldapQuery, User.class);
+
+        if (users.isEmpty()) {
+            return users;
+        }
+
+        List<User> sanitizedUsers = new ArrayList<>();
+        users.forEach(user -> {
+            user.setEmailAddress(null);
+            user.setPassword(null);
+            user.setPhoneNo(null);
+            sanitizedUsers.add(user);
+        });
+
+        return sanitizedUsers.stream()
+                .sorted((u1, u2) -> {
+                    int score1 = getSimilarityScore(u1.getUid(), query);
+                    int score2 = getSimilarityScore(u2.getUid(), query);
+                    if (score1 == score2) {
+                        score1 = getSimilarityScore(u1.getName() + " " + u1.getSurname(), query);
+                        score2 = getSimilarityScore(u2.getName() + " " + u2.getSurname(), query);
+                    }
+                    return Integer.compare(score2, score1);
+                })
+                .toList();
+    }
+
+    private int getSimilarityScore(String value, String query) {
+        return value.toLowerCase().split(query.toLowerCase(), -1).length - 1;
     }
 }

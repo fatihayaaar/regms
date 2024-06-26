@@ -6,7 +6,7 @@ public interface IPostCommandHandler<T extends BaseDto> extends IHandler<T> {
 
     T add(T entity);
 
-    boolean delete(String id);
+    boolean delete(T entity);
 
     T update(T entity);
 

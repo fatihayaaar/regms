@@ -1,7 +1,6 @@
 package com.fayardev.regms.postservice.service.abstracts;
 
 import com.fayardev.regms.postservice.dto.BaseDto;
-import com.fayardev.regms.postservice.dto.PostDto;
 
 import java.util.List;
 
