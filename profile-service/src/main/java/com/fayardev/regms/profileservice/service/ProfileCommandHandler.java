@@ -47,6 +47,17 @@ public class ProfileCommandHandler implements IProfileCommandHandler<ProfileDto>
     }
 
     @Override
+    public void changeIsNotifications(ProfileDto profileDto) {
+        Optional<Profile> profile = repository.getProfilesByUserId(profileDto.getUserId());
+        Profile updatedProfile = profile.map(it -> {
+            it.setNotificationsEnabled(profileDto.isNotificationsEnabled());
+            return it;
+        }).orElseThrow(IllegalArgumentException::new);
+        repository.save(updatedProfile);
+    }
+
+
+    @Override
     public void changeBackgroundImage(ProfileDto profileDto) {
         Optional<Profile> profile = repository.getProfilesByUserId(profileDto.getUserId());
         Profile updatedProfile = profile.map(it -> {

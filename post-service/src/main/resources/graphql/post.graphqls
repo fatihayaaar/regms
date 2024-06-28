@@ -11,6 +11,7 @@ type Post {
     isDeleted: Boolean
     username: String
     avatar: String
+    isLike: Boolean
 }
 
 input PostDto {
@@ -26,6 +27,7 @@ input PostDto {
     isDeleted: Boolean
     username: String
     avatar: String
+    isLike: Boolean
 }
 
 type Query {

@@ -1,0 +1,26 @@
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.fayardev.likeservice.like;
+
+service LikeService {
+  rpc GetIsLike(LikeRequest) returns (LikeResponse);
+  rpc GetLikesCount(LikeCountRequest) returns (LikeCountResponse);
+}
+
+message LikeRequest {
+  string userId = 1;
+  string postId = 2;
+}
+
+message LikeResponse {
+  bool isLike = 1;
+}
+
+message LikeCountRequest {
+  string postId = 1;
+}
+
+message LikeCountResponse {
+  int32 likeCount = 1;
+}

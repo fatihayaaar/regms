@@ -33,6 +33,13 @@ public class ProfileCommandController {
         return ResponseEntity.ok(true);
     }
 
+    @PutMapping("/change-is-notifications")
+    public ResponseEntity<Boolean> changeIsNotifications(@RequestBody ProfileDto profileDto) {
+        profileDto.setUserId(JwtUtils.getUserUUID());
+        handler.changeIsNotifications(profileDto);
+        return ResponseEntity.ok(true);
+    }
+
     @PutMapping("/change-background-image")
     public ResponseEntity<Boolean> changeBackgroundImage(@RequestBody ProfileDto profileDto) {
         profileDto.setUserId(JwtUtils.getUserUUID());

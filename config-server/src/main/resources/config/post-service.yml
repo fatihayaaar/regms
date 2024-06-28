@@ -5,6 +5,10 @@ server:
       client:
         url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:8077}
 
+grpc:
+  server:
+    port: 0
+
 eureka:
   client:
     instance:

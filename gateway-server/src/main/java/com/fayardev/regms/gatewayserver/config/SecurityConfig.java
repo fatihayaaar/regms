@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .pathMatchers("/profile/v1/feign/add").denyAll()
                         .pathMatchers("/post/v1/public/**").permitAll()
                         .pathMatchers("/follow/v1/public/**").permitAll()
+                        .pathMatchers("/like/v1/public/**").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 

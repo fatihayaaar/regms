@@ -20,6 +20,7 @@ public class PostDto extends BaseDto {
     private Date updatedDate;
     private int likeCount;
     private int commentCount;
+    private boolean isLike;
     private boolean visible;
     private boolean isDeleted;
     private String username;

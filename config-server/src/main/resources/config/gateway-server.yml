@@ -66,6 +66,16 @@ spring:
               args:
                 name: userCircuitBreaker
                 fallbackUri: forward:/fallback/followFallback
+        - id: like-service
+          uri: lb://like-service
+          predicates:
+            - Path=/like/**
+          filters:
+            - RewritePath=/like/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/likeFallback
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -78,7 +88,7 @@ spring:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
     permit-all:
-      urls: /public/**, /user/v1/public/**, /profile/v1/public/**, /post/v1/public/**, /follow/v1/public/**
+      urls: /public/**, /user/v1/public/**, /profile/v1/public/**, /post/v1/public/**, /follow/v1/public/**, /like/v1/public/**
 
 springdoc:
   swagger-ui:
