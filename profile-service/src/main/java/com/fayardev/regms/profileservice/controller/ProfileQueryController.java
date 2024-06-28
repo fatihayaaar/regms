@@ -5,10 +5,7 @@ import com.fayardev.regms.profileservice.service.ProfileQueryHandler;
 import com.fayardev.regms.profileservice.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -26,5 +23,10 @@ public class ProfileQueryController {
     @GetMapping("/{username}")
     public ResponseEntity<ProfileDto> getProfile(@PathVariable String username) {
         return ResponseEntity.ok(handler.getByUsername(username));
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<ProfileDto> getProfileById(@RequestParam String id) {
+        return ResponseEntity.ok(handler.get(id));
     }
 }

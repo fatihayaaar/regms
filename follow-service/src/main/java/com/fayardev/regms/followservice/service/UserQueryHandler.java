@@ -50,30 +50,30 @@ public class UserQueryHandler implements IUserQueryHandler<UserDto> {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getFollowees(String username) {
+    public List<String> getFollowees(String username) {
         UserResponse user = userClient.getUserByUsername(username);
 
-        return repository.findFollowees(user.getUuid()).stream().map(u -> modelMapper.map(u, UserDto.class)).toList();
+        return repository.findFollowees(user.getUuid());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getFollowers(String username) {
+    public List<String> getFollowers(String username) {
         UserResponse user = userClient.getUserByUsername(username);
 
-        return repository.findFollowers(user.getUuid()).stream().map(u -> modelMapper.map(u, UserDto.class)).toList();
+        return repository.findFollowers(user.getUuid());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getFolloweesById(String userId) {
-        return repository.findFollowees(userId).stream().map(u -> modelMapper.map(u, UserDto.class)).toList();
+    public List<String> getFolloweesById(String userId) {
+        return repository.findFollowees(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getFollowersById(String userId) {
-        return repository.findFollowers(userId).stream().map(u -> modelMapper.map(u, UserDto.class)).toList();
+    public List<String> getFollowersById(String userId) {
+        return repository.findFollowers(userId);
     }
 
 

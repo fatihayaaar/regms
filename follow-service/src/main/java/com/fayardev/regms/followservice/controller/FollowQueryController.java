@@ -29,13 +29,13 @@ public class FollowQueryController {
         return ResponseEntity.ok(handler.getFollowerCount(username));
     }
 
-    @GetMapping("/followees")
-    public ResponseEntity<List<UserDto>> getFollowees(@RequestParam String username) {
+    @GetMapping("/followee")
+    public ResponseEntity<List<String>> getFollowee(@RequestParam String username) {
         return ResponseEntity.ok(handler.getFollowees(username));
     }
 
     @GetMapping("/followers")
-    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam String username) {
+    public ResponseEntity<List<String>> getFollowers(@RequestParam String username) {
         return ResponseEntity.ok(handler.getFollowers(username));
     }
 
@@ -49,13 +49,13 @@ public class FollowQueryController {
         return ResponseEntity.ok(handler.getFollowerCountById(JwtUtils.getUserUUID()));
     }
 
-    @GetMapping("/my-followees")
-    public ResponseEntity<List<UserDto>> getMyFollowees() {
+    @GetMapping("/my-followee")
+    public ResponseEntity<List<String>> getMyFollowee() {
         return ResponseEntity.ok(handler.getFolloweesById(JwtUtils.getUserUUID()));
     }
 
     @GetMapping("/my-followers")
-    public ResponseEntity<List<UserDto>> getMyFollowers() {
+    public ResponseEntity<List<String>> getMyFollowers() {
         return ResponseEntity.ok(handler.getFollowersById(JwtUtils.getUserUUID()));
     }
 

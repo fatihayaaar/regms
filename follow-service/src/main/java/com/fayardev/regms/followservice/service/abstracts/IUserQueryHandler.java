@@ -14,13 +14,13 @@ public interface IUserQueryHandler<T extends BaseDto> extends IHandler<T> {
 
     int getFollowerCountById(String userId);
 
-    List<T> getFollowees(String username);
+    List<String> getFollowees(String username);
 
-    List<T> getFollowers(String username);
+    List<String> getFollowers(String username);
 
-    List<T> getFolloweesById(String userId);
+    List<String> getFolloweesById(String userId);
 
-    List<T> getFollowersById(String userId);
+    List<String> getFollowersById(String userId);
 
     Iterable<T> getAll();
 }

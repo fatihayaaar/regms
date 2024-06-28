@@ -25,7 +25,7 @@ public class UserQueryHandler implements IUserQueryHandler<UserDto> {
         List<User> users = repository.findAll();
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class UserQueryHandler implements IUserQueryHandler<UserDto> {
         List<User> users = repository.searchUsers(value);
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

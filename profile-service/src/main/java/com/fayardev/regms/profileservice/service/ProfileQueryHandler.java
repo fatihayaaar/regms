@@ -6,6 +6,7 @@ import com.fayardev.regms.profileservice.dto.ProfileDto;
 import com.fayardev.regms.profileservice.repository.ProfileRepository;
 import com.fayardev.regms.profileservice.service.abstracts.IProfileQueryHandler;
 import com.fayardev.userservice.user.UserResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
@@ -26,13 +27,7 @@ public class ProfileQueryHandler implements IProfileQueryHandler<ProfileDto> {
         UserResponse user = userClient.getUserByUuid(id);
 
         ProfileDto profile = modelMapper.map(repository.getProfilesByUserId(id).orElseThrow(IllegalAccessError::new), ProfileDto.class);
-        profile.setUsername(user.getUid());
-        profile.setName(user.getName());
-        profile.setSurname(user.getSurname());
-        profile.setAvatar(user.getAvatar());
-        profile.setFollowing(followClient.isFollowing(user.getUid()));
-
-        return profile;
+        return getProfileDto(user, profile);
     }
 
     @Override
@@ -40,6 +35,11 @@ public class ProfileQueryHandler implements IProfileQueryHandler<ProfileDto> {
         UserResponse user = userClient.getUserByUsername(username);
 
         ProfileDto profile = modelMapper.map(repository.getProfilesByUserId(user.getUuid()).orElseThrow(IllegalAccessError::new), ProfileDto.class);
+        return getProfileDto(user, profile);
+    }
+
+    @NotNull
+    private ProfileDto getProfileDto(UserResponse user, ProfileDto profile) {
         profile.setUsername(user.getUid());
         profile.setName(user.getName());
         profile.setSurname(user.getSurname());

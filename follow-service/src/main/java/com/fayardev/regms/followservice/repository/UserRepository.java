@@ -21,9 +21,9 @@ public interface UserRepository extends Neo4jRepository<User, String> {
     @Query("MATCH (u:User)<-[:FOLLOWS]-(f) WHERE u.id = $userId RETURN COUNT(f)")
     int countFollowers(String userId);
 
-    @Query("MATCH (u:User {id: $userId})-[:FOLLOWS]->(f:User) RETURN f")
-    List<User> findFollowees(String userId);
+    @Query("MATCH (u:User {id: $userId})-[:FOLLOWS]->(f:User) RETURN f.id AS followeeId")
+    List<String> findFollowees(String userId);
 
-    @Query("MATCH (u:User)<-[:FOLLOWS]-(f:User) WHERE u.id = $userId RETURN f")
-    List<User> findFollowers(String userId);
+    @Query("MATCH (u:User)<-[:FOLLOWS]-(f:User) WHERE u.id = $userId RETURN f.id AS followerId")
+    List<String> findFollowers(String userId);
 }
