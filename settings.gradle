@@ -11,4 +11,5 @@ include 'feed-service'
 include 'file-server'
 include 'admin-server'
 include 'like-service'
+include 'comment-service'
 

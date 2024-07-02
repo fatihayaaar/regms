@@ -1,0 +1,45 @@
+server:
+  port: ${SERVER_PORT:0}
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:8077}
+
+grpc:
+  server:
+    port: 0
+
+eureka:
+  client:
+    instance:
+      hostname: ${EUREKA_SERVER_HOSTNAME:localhost}
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761}/eureka/
+
+spring:
+  application:
+    name: comment-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: 12345678
+  zipkin:
+    base-url: ${ZIPKIN_SERVER_URL:http://localhost:9411}
+
+springdoc:
+  packagesToScan: com.fayardev.regms.commentservice
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: "*"

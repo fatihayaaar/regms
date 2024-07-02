@@ -33,4 +33,9 @@ public class FallBackController {
     public ResponseEntity<String> likeFallBack(){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("We are facing a problem");
     }
+
+    @GetMapping("/commentFallback")
+    public ResponseEntity<String> commentFallBack(){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("We are facing a problem");
+    }
 }

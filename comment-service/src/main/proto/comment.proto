@@ -1,0 +1,16 @@
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.fayardev.commentservice.comment;
+
+service CommentService {
+  rpc GetCommentsCount(CommentCountRequest) returns (CommentCountResponse);
+}
+
+message CommentCountRequest {
+  string postId = 1;
+}
+
+message CommentCountResponse {
+  int32 commentCount = 1;
+}
