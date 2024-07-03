@@ -1,0 +1,3 @@
+[submodule "regms-client"]
+	path = regms-client
+	url = https://github.com/fatihayaaar/regms-client
