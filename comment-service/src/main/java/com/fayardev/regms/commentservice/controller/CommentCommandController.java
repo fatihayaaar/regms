@@ -20,7 +20,7 @@ public class CommentCommandController {
         return ResponseEntity.ok(handler.addComment(comment));
     }
 
-    @DeleteMapping
+    @PostMapping("/delete")
     public ResponseEntity<Boolean> unlike(@RequestBody CommentDto comment) {
         comment.setUserId(JwtUtils.getUserUUID());
         return ResponseEntity.ok(handler.removeComment(comment));
