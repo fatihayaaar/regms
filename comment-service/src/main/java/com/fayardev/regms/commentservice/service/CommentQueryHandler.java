@@ -29,14 +29,18 @@ public class CommentQueryHandler implements ICommentQueryHandler<CommentDto> {
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByPostId(String postId) {
-        return repository.findCommentsByPostId(postId).stream().map((c) -> {
-            CommentDto comment = modelMapper.map(c, CommentDto.class);
+        return repository.findCommentsByPostId(postId).stream().map(c -> {
+            try {
+                CommentDto comment = modelMapper.map(c, CommentDto.class);
 
-            UserResponse user = userGrpcClient.getUserByUuid(comment.getUserId());
-            comment.setAvatar(user.getAvatar());
-            comment.setUsername(user.getUid());
+                UserResponse user = userGrpcClient.getUserByUuid(comment.getUserId());
+                comment.setAvatar(user.getAvatar());
+                comment.setUsername(user.getUid());
 
-            return comment;
+                return comment;
+            } catch(Exception e) {
+                return new CommentDto();
+            }
         }).toList();
     }
 

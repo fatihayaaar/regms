@@ -24,6 +24,6 @@ public class Comment extends BaseEntity {
     private String text;
     private Date createdDate;
 
-    @Relationship(type = "COMMENTED_ON")
+    @Relationship(type = "COMMENTED_ON", direction = Relationship.Direction.OUTGOING)
     private Post post;
 }

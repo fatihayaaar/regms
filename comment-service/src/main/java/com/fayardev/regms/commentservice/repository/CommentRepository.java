@@ -14,7 +14,7 @@ public interface CommentRepository extends Neo4jRepository<Comment, Long> {
     @Query("MATCH (p:Post)<-[c:COMMENTED_ON]-(:Comment) WHERE p.id = $postId RETURN count(c)")
     long countCommentsByPostId(String postId);
 
-    @Query("MATCH (p:Post)<-[c:COMMENTED_ON]-(:Comment) WHERE p.id = $postId RETURN c.userId, c.text, c.createdDate")
+    @Query("MATCH (c:Comment)-[:COMMENTED_ON]->(p:Post {id: $postId}) RETURN c")
     List<Comment> findCommentsByPostId(String postId);
 
     @Query("MATCH (p:Post {id: $postId})<-[:COMMENTED_ON]-(c:Comment {userId: $userId}) RETURN count(c) > 0")

@@ -15,7 +15,7 @@ public class CommentCommandController {
     private final CommentCommandHandler handler;
 
     @PostMapping
-    public ResponseEntity<Long> comment(@RequestBody CommentDto comment) {
+    public ResponseEntity<CommentDto> comment(@RequestBody CommentDto comment) {
         comment.setUserId(JwtUtils.getUserUUID());
         return ResponseEntity.ok(handler.addComment(comment));
     }

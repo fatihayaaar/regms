@@ -22,10 +22,11 @@ public class CommentCommandHandler implements ICommentCommandHandler<CommentDto>
 
     @Transactional
     @Override
-    public Long addComment(CommentDto comment) {
+    public CommentDto addComment(CommentDto comment) {
         if (this.postGrpcClient.checkPostExists(comment.getPost().getId())) {
             comment.setCreatedDate(new Date());
-            return repository.save(modelMapper.map(comment, Comment.class)).getId();
+            repository.save(modelMapper.map(comment, Comment.class));
+            return comment;
         }
         throw new IllegalArgumentException();
     }
