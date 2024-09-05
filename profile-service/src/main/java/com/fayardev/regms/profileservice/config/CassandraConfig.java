@@ -21,7 +21,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     public SchemaAction getSchemaAction() {
-        String schemaAction = environment.getProperty("spring.cassandra.schema-action");
+        String schemaAction = environment.getProperty("spring.cassandra.schema-action", "CREATE_IF_NOT_EXISTS");
         return SchemaAction.valueOf(schemaAction);
     }
 }
