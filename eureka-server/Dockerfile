@@ -3,8 +3,6 @@ FROM amazoncorretto:19
 WORKDIR /app
 COPY build/libs/eureka-server-1.0.jar eureka-server.jar
 
-VOLUME /tmp
-
 ENV PROFILES=native,docker
 ENV SERVER_PORT=8761
 ENV SERVER_HOST="localhost"

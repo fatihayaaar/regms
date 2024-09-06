@@ -29,6 +29,9 @@ spring:
           issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
   zipkin:
     base-url: ${ZIPKIN_SERVER_URL:http://localhost:9411}
+  sleuth:
+    sampler:
+      probability: 1.0
   ldap:
     urls: ${LDAP_SERVER_URL:ldap://localhost:389}
     base: ${LDAP_BASE:dc=fayardev,dc=com}

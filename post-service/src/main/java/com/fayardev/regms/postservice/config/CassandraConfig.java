@@ -21,7 +21,17 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     public SchemaAction getSchemaAction() {
-        String schemaAction = environment.getProperty("spring.cassandra.schema-action");
+        String schemaAction = environment.getProperty("spring.data.cassandra.schema-action");
         return SchemaAction.valueOf(schemaAction);
+    }
+
+    @Override
+    protected String getContactPoints() {
+        return environment.getProperty("spring.data.cassandra.contact-points", "localhost:9042");
+    }
+
+    @Override
+    protected int getPort() {
+        return environment.getProperty("spring.data.cassandra.port", Integer.class, 9042);
     }
 }

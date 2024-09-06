@@ -1,7 +1,9 @@
 spring:
+  profiles:
+    active: ${PROFILES:native}
   application:
     name: admin-server
   cloud:
     config:
-      profile: native
+      profile: ${PROFILES:native}
       uri: ${CONFIG_SERVER_URL:http://localhost:8888}

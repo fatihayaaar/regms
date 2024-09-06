@@ -3,9 +3,8 @@ FROM amazoncorretto:19
 WORKDIR /app
 COPY build/libs/user-service-1.0.jar user-service.jar
 
-VOLUME /tmp
-
-ENV SERVER_PORT=8087
+ENV PROFILES=native,docker
+ENV SERVER_PORT=0
 ENV CONFIG_SERVER_URL="http://localhost:8888"
 ENV EUREKA_SERVER_HOST="localhost"
 ENV EUREKA_SERVER_URL="http://localhost:8761"

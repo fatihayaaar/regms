@@ -3,8 +3,6 @@ FROM amazoncorretto:19
 WORKDIR /app
 COPY build/libs/config-server-1.0.jar config-server.jar
 
-VOLUME /tmp
-
 ENV PROFILES=native,docker
 ENV SERVER_PORT=8888
 

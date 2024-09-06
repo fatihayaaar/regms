@@ -23,10 +23,9 @@ spring:
   data:
     cassandra:
       keyspace: regms_profile
-  cassandra:
-    schema-action: CREATE_IF_NOT_EXISTS
-    port: 9042
-    contact-points: 127.0.0.1
+      contact-points: ${CASSANDRA_CONTACT_POINTS:127.0.0.1}
+      port: 9042
+      schema-action: CREATE_IF_NOT_EXISTS
   zipkin:
     base-url: ${ZIPKIN_SERVER_URL:http://localhost:9411}
 

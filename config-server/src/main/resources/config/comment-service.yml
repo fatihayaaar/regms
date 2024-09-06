@@ -25,10 +25,10 @@ spring:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI:http://localhost:8081/auth/realms/regms}
   neo4j:
-    uri: bolt://localhost:7687
+    uri: bolt://${NEO4J_HOST:localhost}:${NEO4J_PORT:7687}
     authentication:
-      username: neo4j
-      password: 12345678
+      username: ${NEO4J_USERNAME:neo4j}
+      password: ${NEO4J_PASSWORD:12345678}
   zipkin:
     base-url: ${ZIPKIN_SERVER_URL:http://localhost:9411}
 

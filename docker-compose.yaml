@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 
 services:
   vault:
@@ -18,7 +18,7 @@ services:
     cap_add:
       - IPC_LOCK
     healthcheck:
-      test: [ "CMD-SHELL", "wget -qO- http://localhost:8200/v1/sys/health || exit 1" ]
+      test: [ "CMD-SHELL", "wget -qO- http://vault:8200/v1/sys/health || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -84,6 +84,8 @@ services:
       - ./volume/neo4j/neo4j_logs:/logs
       - ./volume/neo4j/neo4j_import:/var/lib/neo4j/import
       - ./volume/neo4j/neo4j_plugins:/plugins
+    networks:
+      - regms_network
 
   openldap:
     container_name: openldap
@@ -200,8 +202,6 @@ services:
     environment:
       PROFILES: ${SPRING_PROFILES}
       SERVER_PORT: ${CONFIG_SERVER_PORT}
-    volumes:
-      - /tmp
     ports:
       - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
     restart: always
@@ -226,12 +226,10 @@ services:
     environment:
       PROFILES: ${EUREKA_SERVER_PROFILE}
       SERVER_PORT: ${EUREKA_SERVER_PORT}
-      SERVER_HOST: ${EUREKA_SERVER_HOST}
-      SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-    volumes:
-      - /tmp
+      SERVER_HOST: "eureka-server"
+      SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
     ports:
       - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
     healthcheck:
@@ -253,13 +251,14 @@ services:
       dockerfile: Dockerfile
     environment:
       SERVER_PORT: ${GATEWAY_SERVER_PORT}
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
       KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
       OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
-    volumes:
-      - /tmp
     ports:
       - "${GATEWAY_SERVER_PORT}:${GATEWAY_SERVER_PORT}"
     healthcheck:
@@ -284,26 +283,18 @@ services:
       context: user-service
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: ${USER_SERVICE_SERVER_PORT}
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
       LDAP_SERVER_URL: ${LDAP_SERVER_URL}
       LDAP_BASE: ${LDAP_BASE}
       LDAP_USERNAME: ${LDAP_USERNAME}
       LDAP_PASSWORD: ${LDAP_PASSWORD}
       OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
-      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
-    volumes:
-      - /tmp
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
     ports:
-      - "${USER_SERVICE_SERVER_PORT}:${USER_SERVICE_SERVER_PORT}"
-    healthcheck:
-      test: "wget --spider -S user-service:${USER_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
-      interval: 2s
-      timeout: 3s
-      retries: 15
+      - "0:8080"
     restart: on-failure
     depends_on:
       gateway-server:
@@ -313,32 +304,25 @@ services:
       - user_service_network
 
   profile-service:
-      container_name: profile-service
-      build:
-        context: profile-service
-        dockerfile: Dockerfile
-      environment:
-        SERVER_PORT: ${PROFILE_SERVICE_SERVER_PORT}
-        CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-        EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
-        EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-        SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-        ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
-      volumes:
-        - /tmp
-      ports:
-        - "${PROFILE_SERVICE_SERVER_PORT}:${PROFILE_SERVICE_SERVER_PORT}"
-      healthcheck:
-        test: "wget --spider -S profile-service:${PROFILE_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
-        interval: 2s
-        timeout: 3s
-        retries: 15
-      restart: on-failure
-      depends_on:
-        gateway-server:
-          condition: service_healthy
-      networks:
-        - regms_network
+    container_name: profile-service
+    build:
+      context: profile-service
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+      CASSANDRA_CONTACT_POINTS: cassandra
+    ports:
+      - "0:8080"
+    restart: no
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
 
   post-service:
     container_name: post-service
@@ -346,22 +330,15 @@ services:
       context: post-service
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: ${POST_SERVICE_SERVER_PORT}
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
-    volumes:
-      - /tmp
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+      CASSANDRA_CONTACT_POINTS: cassandra
     ports:
-      - "${POST_SERVICE_SERVER_PORT}:${POST_SERVICE_SERVER_PORT}"
-    healthcheck:
-      test: "wget --spider -S post-service:${POST_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
-      interval: 2s
-      timeout: 3s
-      retries: 15
-    restart: on-failure
+      - "0:8080"
+    restart: no
     depends_on:
       gateway-server:
         condition: service_healthy
@@ -374,21 +351,13 @@ services:
       context: feed-service
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: ${FEED_SERVICE_SERVER_PORT}
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
-    volumes:
-      - /tmp
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
     ports:
-      - "${FEED_SERVICE_SERVER_PORT}:${FEED_SERVICE_SERVER_PORT}"
-    healthcheck:
-      test: "wget --spider -S feed-service:${FEED_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
-      interval: 2s
-      timeout: 3s
-      retries: 15
+      - "0:8080"
     restart: on-failure
     depends_on:
       gateway-server:
@@ -402,21 +371,65 @@ services:
       context: follow-service
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: ${FOLLOW_SERVICE_SERVER_PORT}
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      EUREKA_SERVER_HOST: ${EUREKA_SERVER_HOST}
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-      SPRING_BOOT_ADMIN_SERVER_URL: "${HTTP_PROTOCOL}${SPRING_BOOT_ADMIN_SERVER_HOST}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-      ZIPKIN_SERVER_URL: "${HTTP_PROTOCOL}${ZIPKIN_SERVER_HOST}:${ZIPKIN_SERVER_PORT}"
-    volumes:
-      - /tmp
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      NEO4J_HOST: neo4j
+      NEO4J_PORT: ${NEO4J_PORT}
+      NEO4J_USERNAME: neo4j
+      NEO4J_PASSWORD: 12345678
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
     ports:
-      - "${FOLLOW_SERVICE_SERVER_PORT}:${FOLLOW_SERVICE_SERVER_PORT}"
-    healthcheck:
-      test: "wget --spider -S follow-service:${FOLLOW_SERVICE_SERVER_PORT}/actuator/health/readiness || exit 1"
-      interval: 2s
-      timeout: 3s
-      retries: 15
+      - "0:8080"
+    restart: on-failure
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
+
+  like-service:
+    container_name: like-service
+    build:
+      context: like-service
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      NEO4J_HOST: neo4j
+      NEO4J_PORT: ${NEO4J_PORT}
+      NEO4J_USERNAME: neo4j
+      NEO4J_PASSWORD: 12345678
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+    ports:
+      - "0:8080"
+    restart: on-failure
+    depends_on:
+      gateway-server:
+        condition: service_healthy
+    networks:
+      - regms_network
+
+  comment-service:
+    container_name: comment-service
+    build:
+      context: comment-service
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
+      EUREKA_SERVER_HOST: "eureka-server"
+      SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
+      NEO4J_HOST: neo4j
+      NEO4J_PORT: ${NEO4J_PORT}
+      NEO4J_USERNAME: neo4j
+      NEO4J_PASSWORD: 12345678
+      ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+    ports:
+      - "0:8080"
     restart: on-failure
     depends_on:
       gateway-server:
@@ -430,18 +443,10 @@ services:
       context: admin-server
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: ${SPRING_BOOT_ADMIN_SERVER_PORT}
-      CONFIG_SERVER_URL: "${HTTP_PROTOCOL}${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}"
-      EUREKA_SERVER_URL: "${HTTP_PROTOCOL}${EUREKA_SERVER_HOST}:${EUREKA_SERVER_PORT}"
-    volumes:
-      - /tmp
+      CONFIG_SERVER_URL: "http://config-server:${CONFIG_SERVER_PORT}"
+      EUREKA_SERVER_URL: "http://eureka-server:${EUREKA_SERVER_PORT}"
     ports:
-      - "${SPRING_BOOT_ADMIN_SERVER_PORT}:${SPRING_BOOT_ADMIN_SERVER_PORT}"
-    healthcheck:
-      test: "wget --spider -S admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}/actuator/health/readiness || exit 1"
-      interval: 2s
-      timeout: 3s
-      retries: 15
+      - "0:8080"
     restart: no
     depends_on:
       gateway-server:
@@ -451,6 +456,7 @@ services:
 
 networks:
   regms_network:
+    driver: bridge
   user_service_network:
   openldap_network:
   mysql_network:

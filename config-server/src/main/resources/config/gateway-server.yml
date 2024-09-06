@@ -1,13 +1,14 @@
 server:
-  port: ${SERVER_PORT:8180}
+  port: ${SERVER_PORT:8088}
 
 eureka:
   client:
+    instance:
+      hostname: ${EUREKA_SERVER_HOST:localhost}
+      preferIpAddress: true
     serviceUrl:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
-    register-with-eureka: false
-  instance:
-    preferIpAddress: true
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761}/eureka/
+
 spring:
   application:
     name: gateway-server
@@ -125,8 +126,3 @@ management:
     health:
       probes:
         enabled: true
-
-logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.beans.factory: DEBUG
