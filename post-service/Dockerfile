@@ -12,6 +12,6 @@ ENV SPRING_BOOT_ADMIN_SERVER_URL="http://localhost:8077"
 ENV ZIPKIN_SERVER_URL="http://localhost:9411"
 ENV CASSANDRA_CONTACT_POINTS=127.0.0.1
 
-ENV OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI="http://localhost:8081/auth/realms/regms"
+ENV OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI="http://localhost:8080/auth/realms/regms"
 
 ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-jar", "/app/post-service.jar"]

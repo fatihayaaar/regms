@@ -10,7 +10,9 @@ export LDAP_BIND_CREDENTIAL
      -Dkeycloak.migration.action=import \
      -Dkeycloak.migration.provider=singleFile \
      -Dkeycloak.migration.file=/opt/jboss/keycloak/standalone/configuration/realm-file.json \
-     -Dkeycloak.migration.strategy=OVERWRITE_EXISTING "$@" &
+     -Dkeycloak.migration.strategy=OVERWRITE_EXISTING \
+     -Dkeycloak.hostname.fixed.hostname=keycloak \
+     "$@" &
 KEYCLOAK_PID=$!
 
 /opt/jboss/keycloak/bin/add-user-keycloak.sh -u "${KEYCLOAK_USER}" -p "${KEYCLOAK_PASSWORD}"

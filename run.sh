@@ -19,7 +19,7 @@ do
   ./gradlew :"$microservice":build
 done
 
-docker-compose up &
+docker-compose up -d &
 (
   until docker exec cassandra cqlsh -e "SELECT table_name FROM system_schema.tables;" > /dev/null 2>&1; do
     sleep 3

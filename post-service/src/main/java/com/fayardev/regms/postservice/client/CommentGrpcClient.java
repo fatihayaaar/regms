@@ -18,7 +18,7 @@ public class CommentGrpcClient {
     private static final String COMMENT_SERVICE_NAME = "comment-service";
 
     private ManagedChannel getChannel(String grpcPort) {
-        return ManagedChannelBuilder.forAddress("localhost", Integer.parseInt(grpcPort))
+        return ManagedChannelBuilder.forAddress(COMMENT_SERVICE_NAME, Integer.parseInt(grpcPort))
                 .usePlaintext()
                 .build();
     }

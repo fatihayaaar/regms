@@ -141,7 +141,7 @@ services:
       PMA_USER: ${PMA_USER}
       PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
-      - "8080:80"
+      - "8084:80"
     restart: on-failure
     depends_on:
       mysql:
@@ -163,7 +163,7 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
     ports:
-      - "8081:8080"
+      - "8080:8080"
     volumes:
       - ./keycloak/realm/keycloak/realm-file.json:/opt/jboss/keycloak/standalone/configuration/realm-file.json
       - ./keycloak/theme/regms-theme:/opt/jboss/keycloak/themes/regms-theme
@@ -173,11 +173,6 @@ services:
         condition: service_healthy
       openldap:
         condition: service_healthy
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail http://keycloak:8080/auth || exit 1" ]
-      interval: 10s
-      timeout: 10s
-      retries: 10
     networks:
       - openldap_network
       - mysql_network
@@ -207,8 +202,6 @@ services:
     restart: always
     depends_on:
       vault:
-        condition: service_healthy
-      keycloak:
         condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://config-server:${CONFIG_SERVER_PORT}/actuator/health/readiness | grep -q '^200$' || exit 1" ]
@@ -270,8 +263,6 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
-      keycloak:
-        condition: service_healthy
       cassandra:
         condition: service_healthy
     networks:
@@ -315,6 +306,7 @@ services:
       SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
       ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
       CASSANDRA_CONTACT_POINTS: cassandra
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     ports:
       - "0:8080"
     restart: no
@@ -336,6 +328,7 @@ services:
       SPRING_BOOT_ADMIN_SERVER_URL: "http://admin-server:${SPRING_BOOT_ADMIN_SERVER_PORT}"
       ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
       CASSANDRA_CONTACT_POINTS: cassandra
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     ports:
       - "0:8080"
     restart: no
@@ -380,6 +373,7 @@ services:
       NEO4J_USERNAME: neo4j
       NEO4J_PASSWORD: 12345678
       ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     ports:
       - "0:8080"
     restart: on-failure
@@ -404,6 +398,7 @@ services:
       NEO4J_USERNAME: neo4j
       NEO4J_PASSWORD: 12345678
       ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     ports:
       - "0:8080"
     restart: on-failure
@@ -428,6 +423,7 @@ services:
       NEO4J_USERNAME: neo4j
       NEO4J_PASSWORD: 12345678
       ZIPKIN_SERVER_URL: "http://zipkin-server:${ZIPKIN_SERVER_PORT}"
+      OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI: ${OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
     ports:
       - "0:8080"
     restart: on-failure

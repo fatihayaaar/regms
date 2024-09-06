@@ -18,7 +18,7 @@ public class UserGrpcClient {
     private static final String USER_SERVICE_NAME = "user-service";
 
     private ManagedChannel getChannel(String grpcPort) {
-        return ManagedChannelBuilder.forAddress("localhost", Integer.parseInt(grpcPort))
+        return ManagedChannelBuilder.forAddress(USER_SERVICE_NAME, Integer.parseInt(grpcPort))
                 .usePlaintext()
                 .build();
     }

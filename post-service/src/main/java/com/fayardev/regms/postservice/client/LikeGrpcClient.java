@@ -16,7 +16,7 @@ public class LikeGrpcClient {
     private static final String LIKE_SERVICE_NAME = "like-service";
 
     private ManagedChannel getChannel(String grpcPort) {
-        return ManagedChannelBuilder.forAddress("localhost", Integer.parseInt(grpcPort))
+        return ManagedChannelBuilder.forAddress(LIKE_SERVICE_NAME, Integer.parseInt(grpcPort))
                 .usePlaintext()
                 .build();
     }

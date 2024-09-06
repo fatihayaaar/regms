@@ -18,7 +18,7 @@ public class PostGrpcClient {
     private static final String POST_SERVICE_NAME = "post-service";
 
     private ManagedChannel getChannel(String grpcPort) {
-        return ManagedChannelBuilder.forAddress("localhost", Integer.parseInt(grpcPort))
+        return ManagedChannelBuilder.forAddress(POST_SERVICE_NAME, Integer.parseInt(grpcPort))
                 .usePlaintext()
                 .build();
     }
